@@ -51,10 +51,24 @@ const Home = () => {
         console.log(rx, ry);
         newbombMap[ry][rx] = 11;
       }
-      setA(1); // aの更新
-      console.log(`a:${a}`);
-    }
 
+      for (let x = 0; x < 9; x++) {
+        for (let y = 0; y < 9; y++)
+          if (newbombMap[y][x] !== 11) {
+            let NumBer = 0;
+            for (const [dx, dy] of directions) {
+              const nx = x + dx;
+              const ny = y + dy;
+              if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && newbombMap[ny][nx] === 11) {
+                NumBer++;
+              }
+            }
+            newbombMap[y][x] = NumBer;
+          }
+      }
+    }
+    setA(1); // aの更新
+    console.log(`a:${a}`);
     setbombMap(newbombMap);
   };
 
