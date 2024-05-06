@@ -1,14 +1,19 @@
 import styles from './index.module.css';
 import { useState } from 'react';
 
+const directions = [
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1],
+];
+
 const Home = () => {
   const [samplePos, setsamplePos] = useState(0);
-  // -1 ->石
-  // 0 ->画像なしセル
-  // 1~8 ->数字セル
-  // 9 ->石+はてな
-  // 10 ->石+旗
-  // 11 ->ボムセル
   const [bombMap, setbombMap] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -20,10 +25,6 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  // 0 -> 未クリック
-  // 1 ->左クリック
-  // 2 ->はてな
-  // 3 ->旗
   const [userInputs, setuserInputs] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -35,23 +36,28 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+  const [a, setA] = useState(0); // aの初期化
 
   console.log(samplePos);
 
-  const random = () => {
-    for (let n = 0; n < 10; n++) {
-      const rx = Math.floor(Math.random() * 9);
-      const ry = Math.floor(Math.random() * 9);
-      console.log(rx, ry);
-    }
-  };
-
-  // random関数の呼び出し
-  random();
-
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
+    const newbombMap = structuredClone(bombMap);
+
+    if (a === 0) {
+      for (let n = 0; n < 10; n++) {
+        const rx = Math.floor(Math.random() * 9);
+        const ry = Math.floor(Math.random() * 9);
+        console.log(rx, ry);
+        newbombMap[ry][rx] = 11;
+      }
+      setA(1); // aの更新
+      console.log(`a:${a}`);
+    }
+
+    setbombMap(newbombMap);
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.bombMap}>
@@ -59,6 +65,7 @@ const Home = () => {
           <div key={y} className={styles.row}>
             {row.map((cell, x) => (
               <div key={x} className={styles.cell} onClick={() => clickHandler(x, y)}>
+                <div className={styles.cellContent}>{bombMap[y][x]}</div>
                 <div
                   className={styles.sampleStyle}
                   style={{ backgroundPosition: `${-30 * samplePos}px 0px` }}

@@ -16,10 +16,15 @@
 
 .bombMap {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   width: 360px;
   height: 360px;
   background-color: gray;
+}
+
+.row {
+  display: flex;
 }
 
 .cell {
