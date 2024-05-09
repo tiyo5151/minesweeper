@@ -61,9 +61,11 @@ const Home = () => {
       }
       console.log(cells);
 
+      const filteredCells = cells.filter(([cx, cy]) => !(cx === x && cy === y));
+      console.log(filteredCells);
       for (let i = 0; i < 10; i++) {
-        const [x, y] = cells[i];
-        newbombMap[y][x] = 11;
+        const [cx, cy] = filteredCells[i];
+        newbombMap[cy][cx] = 11;
       }
       for (let x = 0; x < 9; x++) {
         for (let y = 0; y < 9; y++)
