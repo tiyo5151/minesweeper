@@ -36,7 +36,7 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  const [a, setA] = useState(0); // aの初期化
+  const [a, setA] = useState(0);
 
   console.log(samplePos);
 
@@ -45,13 +45,26 @@ const Home = () => {
     const newbombMap = structuredClone(bombMap);
 
     if (a === 0) {
-      for (let n = 0; n < 10; n++) {
-        const rx = Math.floor(Math.random() * 9);
-        const ry = Math.floor(Math.random() * 9);
-        console.log(rx, ry);
-        newbombMap[ry][rx] = 11;
+      const cells = [];
+
+      for (let x = 0; x < 9; x++) {
+        for (let y = 0; y < 9; y++) {
+          cells.push([x, y]);
+        }
       }
 
+      console.log(cells);
+
+      for (let i = cells.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cells[i], cells[j]] = [cells[j], cells[i]];
+      }
+      console.log(cells);
+
+      for (let i = 0; i < 10; i++) {
+        const [x, y] = cells[i];
+        newbombMap[y][x] = 11;
+      }
       for (let x = 0; x < 9; x++) {
         for (let y = 0; y < 9; y++)
           if (newbombMap[y][x] !== 11) {
