@@ -8,11 +8,11 @@
   padding: 0 0.5rem;
 }
 
-/* .sampleStyle {
+.sampleStyle {
   width: 30px;
   height: 30px;
   background: url('~/src/assets/images/minesweeper.icons.png') no-repeat;
-} */
+}
 
 .bombMap {
   display: flex;

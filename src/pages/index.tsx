@@ -13,7 +13,17 @@ const directions = [
 ];
 
 const Home = () => {
-  const [samplePos, setsamplePos] = useState(0);
+  const [samplePos, setsamplePos] = useState([
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
   const [bombMap, setbombMap] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -43,6 +53,7 @@ const Home = () => {
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
+    const newsamplepos = structuredClone(samplePos);
 
     if (a === 0) {
       const cells = [];
@@ -66,6 +77,7 @@ const Home = () => {
       for (let i = 0; i < 10; i++) {
         const [cx, cy] = filteredCells[i];
         newbombMap[cy][cx] = 11;
+        newsamplepos[cy][cx] = 10;
       }
       for (let x = 0; x < 9; x++) {
         for (let y = 0; y < 9; y++)
@@ -79,13 +91,38 @@ const Home = () => {
               }
             }
             newbombMap[y][x] = NumBer;
+            newsamplepos[y][x] = NumBer - 1;
           }
       }
     }
     setA(1); // aの更新
     console.log(`a:${a}`);
     setbombMap(newbombMap);
+    setsamplePos(newsamplepos);
   };
+
+  // const someNumber = (bombMap: number[][]) => {
+  //   let newsamplePos = structuredClone(samplePos);
+  //   const newbombMap = structuredClone(bombMap);
+  //   for (let x = 0; x < 9; x++) {
+  //     for (let y = 0; y < 9; y++) {
+  //       if (bombMap[y][x] === 11) {
+  //         newsamplePos === 10;
+  //       }
+  //       for (const [dx, dy] of directions) {
+  //         let SomeNumber = 0;
+  //         const nx = x + dx;
+  //         const ny = y + dy;
+  //         if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && newbombMap[ny][nx] === 11) {
+  //           SomeNumber++;
+  //         }
+  //         newsamplePos = SomeNumber - 1;
+  //         console.log(newsamplePos);
+  //       }
+  //     }
+  //     setsamplePos(newsamplePos);
+  //   }
+  // };
 
   return (
     <div className={styles.container}>
@@ -94,19 +131,21 @@ const Home = () => {
           <div key={y} className={styles.row}>
             {row.map((cell, x) => (
               <div key={x} className={styles.cell} onClick={() => clickHandler(x, y)}>
-                <div className={styles.cellContent}>{bombMap[y][x]}</div>
                 <div
                   className={styles.sampleStyle}
-                  style={{ backgroundPosition: `${-30 * samplePos}px 0px` }}
+                  style={{ backgroundPosition: `${-30 * samplePos[y][x]}px 0px` }}
                 />
               </div>
             ))}
           </div>
         ))}
       </div>
-      <button onClick={() => setsamplePos((p) => (p + 1) % 14)}>sample</button>
     </div>
   );
 };
 
 export default Home;
+
+{
+  /* <button onClick={() => setsamplePos((p) => (p + 1) % 14)}>sample</button> */
+}
