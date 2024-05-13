@@ -65,6 +65,26 @@ const Home = () => {
 
   console.log(samplePos);
 
+  function spread(x: number, y: number) {
+    const newbombMap = structuredClone(bombMap);
+    const newsamplepos = structuredClone(samplePos);
+
+    for (const [dx, dy] of directions) {
+      const rx = x + dx;
+      const ry = y + dy;
+      if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
+        if (newbombMap[ry][rx] === 0) {
+          newsamplepos[ry][rx] = 0;
+        } else if (newbombMap[ry][rx] === 11) {
+          newsamplepos[ry][rx] === -1;
+        } else if (newbombMap[ry][rx] >= 1 && newbombMap[ry][rx] <= 8) {
+          newsamplepos[ry][rx] = 0;
+        }
+      }
+    }
+    return newsamplepos;
+  }
+
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
@@ -92,7 +112,7 @@ const Home = () => {
       for (let i = 0; i < 10; i++) {
         const [cx, cy] = filteredCells[i];
         newbombMap[cy][cx] = 11;
-        newsamplepos[cy][cx] = 10;
+        // newsamplepos[cy][cx] = 10;
       }
       for (let x = 0; x < 9; x++) {
         for (let y = 0; y < 9; y++)
@@ -106,39 +126,19 @@ const Home = () => {
               }
             }
             newbombMap[y][x] = NumBer;
-            newsamplepos[y][x] = NumBer - 1;
+            // newsamplepos[y][x] = NumBer - 1;
           }
       }
+      newsamplepos[y][x] = 0;
+      spread(x, y);
     }
+    newsamplepos[y][x] = 0;
     setA(1); // aの更新
     console.log(`a:${a}`);
+    console.log(newbombMap);
     setbombMap(newbombMap);
     setsamplePos(newsamplepos);
   };
-
-  // const someNumber = (bombMap: number[][]) => {
-  //   let newsamplePos = structuredClone(samplePos);
-  //   const newbombMap = structuredClone(bombMap);
-  //   for (let x = 0; x < 9; x++) {
-  //     for (let y = 0; y < 9; y++) {
-  //       if (bombMap[y][x] === 11) {
-  //         newsamplePos === 10;
-  //       }
-  //       for (const [dx, dy] of directions) {
-  //         let SomeNumber = 0;
-  //         const nx = x + dx;
-  //         const ny = y + dy;
-  //         if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && newbombMap[ny][nx] === 11) {
-  //           SomeNumber++;
-  //         }
-  //         newsamplePos = SomeNumber - 1;
-  //         console.log(newsamplePos);
-  //       }
-  //     }
-  //     setsamplePos(newsamplePos);
-  //   }
-  // };
-
   return (
     <div className={styles.container}>
       <div className={styles.bombMap}>
@@ -151,7 +151,7 @@ const Home = () => {
                   style={
                     samplePos[y][x] === -1
                       ? undefined
-                      : { backgroundPosition: `${-30 * samplePos[y][x]}px 0px` }
+                      : { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
                   }
                 />
               </div>
