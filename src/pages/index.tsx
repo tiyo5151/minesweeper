@@ -13,8 +13,20 @@ const directions = [
 ];
 
 const Home = () => {
+  // const Board = [
+  // [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // ];
   const [samplePos, setsamplePos] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    //useState[Board]で簡素化するコード調整必要
+    [-1, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -24,6 +36,7 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+
   const [bombMap, setbombMap] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -35,6 +48,7 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+
   const [userInputs, setuserInputs] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -46,6 +60,7 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+
   const [a, setA] = useState(0);
 
   console.log(samplePos);
@@ -132,8 +147,12 @@ const Home = () => {
             {row.map((cell, x) => (
               <div key={x} className={styles.cell} onClick={() => clickHandler(x, y)}>
                 <div
-                  className={styles.sampleStyle}
-                  style={{ backgroundPosition: `${-30 * samplePos[y][x]}px 0px` }}
+                  className={samplePos[y][x] === -1 ? styles.rock : styles.sampleStyle}
+                  style={
+                    samplePos[y][x] !== -1
+                      ? { backgroundPosition: `${-30 * samplePos[y][x]}px 0px` }
+                      : null
+                  }
                 />
               </div>
             ))}

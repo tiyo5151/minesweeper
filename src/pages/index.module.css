@@ -37,3 +37,14 @@
 }
 
 /* bombMap:cell = 9:1 best */
+
+.rock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: yellow;
+  border: 3px;
+  border-color: #fff, #808080, #808080, #fff;
+}
