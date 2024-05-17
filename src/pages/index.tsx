@@ -1,4 +1,3 @@
-import { dirxml } from 'console';
 import styles from './index.module.css';
 import { useState } from 'react';
 
@@ -67,6 +66,12 @@ const Home = () => {
   const Result: number[][] = [];
 
   console.log(samplePos);
+
+  const countup = () => {
+    const time = 0;
+    console.log(time);
+    return time;
+  };
 
   const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
     const newbombMap = structuredClone(bombMap);
@@ -166,6 +171,7 @@ const Home = () => {
             newbombMap[y][x] = NumBer;
           }
       }
+      const count = setInterval(countup, 1000);
       setbombMap(newbombMap);
     }
     const newNewSampleBoard = spread(x, y, newbombMap, samplePos);
@@ -177,6 +183,20 @@ const Home = () => {
   };
   return (
     <div className={styles.container}>
+      <div className={styles.overbombMap1}>
+        <div className={styles.threebase}>
+          <div className={styles.countbase} />
+        </div>
+        <div className={styles.threebase}>
+          <button
+            className={styles.sampleStyle}
+            style={{ backgroundPosition: `${-30 * 11}px 0px` }}
+          />
+        </div>
+        <div className={styles.threebase}>
+          <div className={styles.countbase} />
+        </div>
+      </div>
       <div className={styles.bombMap}>
         {bombMap.map((row, y) => (
           <div key={y} className={styles.row}>
