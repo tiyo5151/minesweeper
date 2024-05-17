@@ -73,7 +73,7 @@ const Home = () => {
     console.log(newbombMap);
     console.log('spread 関数が呼び出されました。入力:', x, y);
 
-    if (newbombMap[y][x] === 0 || newbombMap[y][x]) {
+    if (newbombMap[y][x] === 0) {
       console.log('反応！');
 
       if (x >= 0 && x < 9 && y >= 0 && y < 9) {
@@ -110,11 +110,12 @@ const Home = () => {
           spread(rx, ry, newbombMap, newsamplepos);
         }
       } else {
-        break;
+        continue;
       }
     }
     console.log(Result);
   };
+
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
