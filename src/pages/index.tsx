@@ -63,6 +63,8 @@ const Home = () => {
 
   const [a, setA] = useState(0);
 
+  const Result: number[][] = [];
+
   console.log(samplePos);
 
   const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
@@ -71,33 +73,52 @@ const Home = () => {
     console.log(newbombMap);
     console.log('spread 関数が呼び出されました。入力:', x, y);
 
-    if (newbombMap[y][x] === 0) {
+    if (newbombMap[y][x] === 0 || newbombMap[y][x]) {
       console.log('反応！');
 
       if (x >= 0 && x < 9 && y >= 0 && y < 9) {
         if (newbombMap[y][x] === 0) {
-          newsamplepos[y][x] = 0;
-          for (const [dx, dy] of directions) {
-            const rx = x + dx;
-            const ry = y + dy;
-            if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
-              spread(rx, ry, newbombMap, newsamplepos);
-            }
-          }
-        } else if (newbombMap[y][x] !== 11) {
+          spreadtospread(x, y, bombMap, samplePos);
           newsamplepos[y][x] = 0;
         }
+      } else if (newbombMap[y][x] !== 11) {
+        newsamplepos[y][x] = 0;
       }
+    }
+    for (let i = 0; i < Result.length; i++) {
+      const [by, bx] = Result[i];
+      newsamplepos[by][bx] = 0;
     }
     // setsamplePos(newsamplepos)
     return newsamplepos;
     // console.log(newsamplepos);
   };
 
+  const spreadtospread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
+    const newbombMap = structuredClone(bombMap);
+    const newsamplepos = structuredClone(samplepos);
+    const temporaryResult = [];
+    for (const [dx, dy] of directions) {
+      const rx = x + dx;
+      const ry = y + dy;
+      console.log('rx,ry:', rx, ry);
+      if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
+        if (newbombMap[ry][rx] === 0 && !Result.some(([i, j]) => i === ry && j === rx)) {
+          temporaryResult.push([rx, ry]);
+          // console.log(temporaryResult);
+          Result.push([ry, rx]);
+          spread(rx, ry, newbombMap, newsamplepos);
+        }
+      } else {
+        break;
+      }
+    }
+    console.log(Result);
+  };
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
-    const newsamplepos = structuredClone(samplePos);
+    // const newsamplepos = structuredClone(samplePos);
 
     if (a === 0) {
       const cells = [];
@@ -170,27 +191,3 @@ const Home = () => {
 };
 
 export default Home;
-
-// if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
-//   if (newbombMap[y][x] === 0) {
-//     newsamplepos[y][x] = 0;
-//     if (newbombMap[ry][rx] === 0) {
-//       newsamplepos[ry][rx] = 0;
-//     } else if (newbombMap[ry][rx] === 11) {
-//       newsamplepos[ry][rx] = -1;
-//     } else if (newbombMap[ry][rx] > 0 && newbombMap[ry][rx] < 9) {
-//       newbombMap[ry][rx] = 0;
-//       break;
-//     } else {
-//       break;
-//     }
-// } else {
-//   newsamplepos[y][x] = 0;
-// }
-// // newbombMap[y][x] === 0
-//   ? newbombMap[ry][rx] === 11
-//     ? (newsamplepos[ry][rx] = -1)
-//     : newbombMap[ry][rx] !== 0
-//       ? (newsamplepos[ry][rx] = 0) /*end*/
-//       : (newsamplepos[ry][rx] = 0)
-//   : (newsamplepos[y][x] = 0);
