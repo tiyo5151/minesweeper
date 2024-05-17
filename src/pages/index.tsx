@@ -1,3 +1,4 @@
+import { dirxml } from 'console';
 import styles from './index.module.css';
 import { useState } from 'react';
 
@@ -88,6 +89,13 @@ const Home = () => {
     for (let i = 0; i < Result.length; i++) {
       const [by, bx] = Result[i];
       newsamplepos[by][bx] = 0;
+      for (const [dx, dy] of directions) {
+        const cx = bx + dx;
+        const cy = by + dy;
+        if (cx >= 0 && cx < 9 && cy >= 0 && cy < 9) {
+          newsamplepos[cy][cx] = 0;
+        }
+      }
     }
     // setsamplePos(newsamplepos)
     return newsamplepos;
@@ -141,8 +149,8 @@ const Home = () => {
       const filteredCells = cells.filter(([cx, cy]) => !(cx === x && cy === y));
       // console.log(filteredCells);
       for (let i = 0; i < 10; i++) {
-        const [cx, cy] = filteredCells[i];
-        newbombMap[cy][cx] = 11;
+        const [dx, dy] = filteredCells[i];
+        newbombMap[dy][dx] = 11;
       }
       for (let x = 0; x < 9; x++) {
         for (let y = 0; y < 9; y++)
