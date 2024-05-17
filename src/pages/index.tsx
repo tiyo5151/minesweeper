@@ -65,38 +65,33 @@ const Home = () => {
 
   console.log(samplePos);
 
-  const spread = (x: number, y: number) => {
+  const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
     const newbombMap = structuredClone(bombMap);
-    const newsamplepos = structuredClone(samplePos);
-
+    const newsamplepos = structuredClone(samplepos);
+    console.log(newbombMap);
     console.log('spread 関数が呼び出されました。入力:', x, y);
-    for (const [dx, dy] of directions) {
-      const rx = x + dx;
-      const ry = y + dy;
-      if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
-        newbombMap[y][x] === 0
-          ? newbombMap[ry][rx] === 11
-            ? (newsamplepos[ry][rx] = -1)
-            : newbombMap[ry][rx] !== 0
-              ? (newsamplepos[ry][rx] = 0) /*end*/
-              : (newsamplepos[ry][rx] = 0)
-          : (newsamplepos[y][x] = 0);
 
-        // if (newbombMap[y][x] === 0) {
-        //   if (newbombMap[ry][rx] === 0) {
-        //     newsamplepos[ry][rx] = 0;
-        //   } else if (newbombMap[ry][rx] === 11) {
-        //     newsamplepos[ry][rx] = -1;
-        //   } else if (newbombMap[ry][rx] >= 1 && newbombMap[ry][rx] <= 8) {
-        //     newsamplepos[ry][rx] = 0;
-        //   }
-        // } else {
-        //   break;
-        // }
+    if (newbombMap[y][x] === 0) {
+      console.log('反応！');
+
+      if (x >= 0 && x < 9 && y >= 0 && y < 9) {
+        if (newbombMap[y][x] === 0) {
+          newsamplepos[y][x] = 0;
+          for (const [dx, dy] of directions) {
+            const rx = x + dx;
+            const ry = y + dy;
+            if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
+              spread(rx, ry, newbombMap, newsamplepos);
+            }
+          }
+        } else if (newbombMap[y][x] !== 11) {
+          newsamplepos[y][x] = 0;
+        }
       }
     }
-    // console.log('spread 関数の戻り値:', spread(x, y));
-    setsamplePos(newsamplepos);
+    // setsamplePos(newsamplepos)
+    return newsamplepos;
+    // console.log(newsamplepos);
   };
 
   const clickHandler = (x: number, y: number) => {
@@ -113,16 +108,16 @@ const Home = () => {
         }
       }
 
-      console.log(cells);
+      // console.log(cells);
 
       for (let i = cells.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [cells[i], cells[j]] = [cells[j], cells[i]];
       }
-      console.log(cells);
+      // console.log(cells);
 
       const filteredCells = cells.filter(([cx, cy]) => !(cx === x && cy === y));
-      console.log(filteredCells);
+      // console.log(filteredCells);
       for (let i = 0; i < 10; i++) {
         const [cx, cy] = filteredCells[i];
         newbombMap[cy][cx] = 11;
@@ -141,20 +136,14 @@ const Home = () => {
             newbombMap[y][x] = NumBer;
           }
       }
-      // newsamplepos[y][x] = 0;
-      spread(x, y);
       setbombMap(newbombMap);
-    } else {
-      newsamplepos[y][x] = 0;
-      setsamplePos(newsamplepos);
     }
-
-    // newsamplepos[y][x] = 0;
+    const newNewSampleBoard = spread(x, y, newbombMap, samplePos);
+    newNewSampleBoard[y][x] = 0;
+    setsamplePos(newNewSampleBoard);
     setA(1); // aの更新
-    console.log(`a:${a}`);
+    // console.log(`a:${a}`);
     console.log(newbombMap);
-    setbombMap(newbombMap);
-    // setsamplePos(newsamplepos);
   };
   return (
     <div className={styles.container}>
@@ -181,3 +170,27 @@ const Home = () => {
 };
 
 export default Home;
+
+// if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
+//   if (newbombMap[y][x] === 0) {
+//     newsamplepos[y][x] = 0;
+//     if (newbombMap[ry][rx] === 0) {
+//       newsamplepos[ry][rx] = 0;
+//     } else if (newbombMap[ry][rx] === 11) {
+//       newsamplepos[ry][rx] = -1;
+//     } else if (newbombMap[ry][rx] > 0 && newbombMap[ry][rx] < 9) {
+//       newbombMap[ry][rx] = 0;
+//       break;
+//     } else {
+//       break;
+//     }
+// } else {
+//   newsamplepos[y][x] = 0;
+// }
+// // newbombMap[y][x] === 0
+//   ? newbombMap[ry][rx] === 11
+//     ? (newsamplepos[ry][rx] = -1)
+//     : newbombMap[ry][rx] !== 0
+//       ? (newsamplepos[ry][rx] = 0) /*end*/
+//       : (newsamplepos[ry][rx] = 0)
+//   : (newsamplepos[y][x] = 0);
