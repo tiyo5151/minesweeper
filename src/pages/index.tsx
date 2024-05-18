@@ -63,16 +63,18 @@ const Home = () => {
 
   const [a, setA] = useState(0);
 
+  let [time, settime] = useState(0);
+
+  const [stop, setstop] = useState(false);
+
   const Result: number[][] = [];
 
   console.log(samplePos);
 
   const countup = () => {
-    const time = 0;
-    console.log(time);
-    return time;
+    settime(time++);
   };
-
+  console.log(time);
   const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
     const newbombMap = structuredClone(bombMap);
     const newsamplepos = structuredClone(samplepos);
@@ -129,6 +131,33 @@ const Home = () => {
     console.log(Result);
   };
 
+  const reset = () => {
+    setA(0);
+    settime(0);
+    setstop(true);
+    setsamplePos([
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
+    ]);
+    setbombMap([
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]);
+  };
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
@@ -173,7 +202,12 @@ const Home = () => {
       }
       const count = setInterval(countup, 1000);
       setbombMap(newbombMap);
+      if (stop) {
+        console.log('aaaaaaaaaaaaaaa');
+        clearInterval(count);
+      }
     }
+
     const newNewSampleBoard = spread(x, y, newbombMap, samplePos);
     newNewSampleBoard[y][x] = 0;
     setsamplePos(newNewSampleBoard);
@@ -191,10 +225,11 @@ const Home = () => {
           <button
             className={styles.sampleStyle}
             style={{ backgroundPosition: `${-30 * 11}px 0px` }}
+            onClick={() => reset()}
           />
         </div>
         <div className={styles.threebase}>
-          <div className={styles.countbase} />
+          <div className={styles.countbase}>{time}</div>
         </div>
       </div>
       <div className={styles.bombMap}>
