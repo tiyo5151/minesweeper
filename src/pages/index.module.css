@@ -74,3 +74,15 @@
   color: red;
   background-color: #000;
 }
+
+.fusion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: url('~/src/assets/images/minesweeper.icons.png') no-repeat;
+  background-color: #c6c6c6;
+  border: 5px solid;
+  border-color: #fff #808080 #808080 #fff;
+}

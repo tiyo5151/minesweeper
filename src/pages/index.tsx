@@ -267,7 +267,7 @@ const Home = () => {
                       ? styles.rock
                       : userInputs[y][x] === 0
                         ? styles.sampleStyle
-                        : styles.rock && styles.sampleStyle
+                        : styles.fusion
                   }
                   style={
                     userInputs[y][x] === -1
