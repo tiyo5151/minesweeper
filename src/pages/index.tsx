@@ -1,5 +1,5 @@
 import styles from './index.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const directions = [
   [1, 0],
@@ -24,7 +24,7 @@ const Home = () => {
   // [0, 0, 0, 0, 0, 0, 0, 0, 0],
   // [0, 0, 0, 0, 0, 0, 0, 0, 0],
   // ];
-  const [samplePos, setsamplePos] = useState([
+  const [userInputs, setuserInputs] = useState([
     //useState[Board]で簡素化するコード調整必要
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -36,6 +36,11 @@ const Home = () => {
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   ]);
+
+  // -3:rock+question
+  // -2:rock+flag
+  // -1:rock
+  // 0:none
 
   const [bombMap, setbombMap] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -49,32 +54,37 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  const [userInputs, setuserInputs] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
+  // 0:none
+  // 1~8:number
+  // 11:bomb
 
   const [a, setA] = useState(0);
 
-  let [time, settime] = useState(0);
+  const [time, settime] = useState(0);
 
-  const [stop, setstop] = useState(false);
+  const [start, setstart] = useState(false);
 
   const Result: number[][] = [];
 
-  console.log(samplePos);
+  console.log(userInputs);
 
-  const countup = () => {
-    settime(time++);
-  };
+  useEffect(() => {
+    let interval: number | undefined;
+
+    if (start) {
+      console.log('aaaaaaaaaa');
+      interval = window.setInterval(() => {
+        settime(time + 1);
+      }, 1000);
+    } else if (!start && time !== 0) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [start, time]);
+
   console.log(time);
+
   const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
     const newbombMap = structuredClone(bombMap);
     const newsamplepos = structuredClone(samplepos);
@@ -86,7 +96,7 @@ const Home = () => {
 
       if (x >= 0 && x < 9 && y >= 0 && y < 9) {
         if (newbombMap[y][x] === 0) {
-          spreadtospread(x, y, bombMap, samplePos);
+          spreadtospread(x, y, bombMap, userInputs);
           newsamplepos[y][x] = 0;
         }
       } else if (newbombMap[y][x] !== 11) {
@@ -104,7 +114,7 @@ const Home = () => {
         }
       }
     }
-    // setsamplePos(newsamplepos)
+    // setuserInputs(newsamplepos)
     return newsamplepos;
     // console.log(newsamplepos);
   };
@@ -134,8 +144,8 @@ const Home = () => {
   const reset = () => {
     setA(0);
     settime(0);
-    setstop(true);
-    setsamplePos([
+    setstart(false);
+    setuserInputs([
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -158,10 +168,11 @@ const Home = () => {
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
   };
+
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
-    // const newsamplepos = structuredClone(samplePos);
+    // const newsamplepos = structuredClone(userInputs);
 
     if (a === 0) {
       const cells = [];
@@ -200,18 +211,14 @@ const Home = () => {
             newbombMap[y][x] = NumBer;
           }
       }
-      const count = setInterval(countup, 1000);
+      setstart(true);
       setbombMap(newbombMap);
-      if (stop) {
-        console.log('aaaaaaaaaaaaaaa');
-        clearInterval(count);
-      }
     }
-
-    const newNewSampleBoard = spread(x, y, newbombMap, samplePos);
+    const newNewSampleBoard = spread(x, y, newbombMap, userInputs);
     newNewSampleBoard[y][x] = 0;
-    setsamplePos(newNewSampleBoard);
+    setuserInputs(newNewSampleBoard);
     setA(1); // aの更新
+
     // console.log(`a:${a}`);
     console.log(newbombMap);
   };
@@ -238,9 +245,9 @@ const Home = () => {
             {row.map((cell, x) => (
               <div key={x} className={styles.cell} onClick={() => clickHandler(x, y)}>
                 <div
-                  className={samplePos[y][x] === -1 ? styles.rock : styles.sampleStyle}
+                  className={userInputs[y][x] === -1 ? styles.rock : styles.sampleStyle}
                   style={
-                    samplePos[y][x] === -1
+                    userInputs[y][x] === -1
                       ? undefined
                       : { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
                   }
