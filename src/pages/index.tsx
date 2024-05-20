@@ -179,9 +179,27 @@ const Home = () => {
         newuserInputs[y][x] = -1;
       }
     }
-
     setuserInputs(newuserInputs);
   };
+
+  // const flagcount = () => {
+  //   const newuserInputs = structuredClone(userInputs);
+  //   for (let x = 0; x < 9; x++) {
+  //     for (let y = 0; y < 9; y++) {
+  //       const result = newuserInputs.filter(([x, y]) => newuserInputs[y][x] === -2);
+  //     }
+  //   }
+  // };
+
+  const countflag = () => {
+    let count = 0;
+    for (const row of userInputs) {
+      count += row.filter((userInputs) => userInputs === -2).length;
+    }
+    return count;
+  };
+
+  const flagnumber = 10 - countflag();
 
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
@@ -235,7 +253,6 @@ const Home = () => {
     newNewSampleBoard[y][x] = 0;
     setuserInputs(newNewSampleBoard);
     setA(1); // aの更新
-    // console.log('aiueooooooo');
     // console.log(`a:${a}`);
     console.log(newbombMap);
   };
@@ -243,7 +260,7 @@ const Home = () => {
     <div className={styles.container}>
       <div className={styles.overbombMap1}>
         <div className={styles.threebase}>
-          <div className={styles.countbase} />
+          <div className={styles.countbase}>{flagnumber}</div>
         </div>
         <div className={styles.threebase}>
           <button
