@@ -66,13 +66,12 @@ const Home = () => {
 
   const Result: number[][] = [];
 
-  console.log(userInputs);
+  // console.log(userInputs);
 
   useEffect(() => {
     let interval: number | undefined;
 
     if (start) {
-      console.log('aaaaaaaaaa');
       interval = window.setInterval(() => {
         settime(time + 1);
       }, 1000);
@@ -169,6 +168,19 @@ const Home = () => {
     ]);
   };
 
+  const Rclick = (x: number, y: number, event: React.MouseEvent<HTMLDivElement>) => {
+    // const newbombmap = structuredClone(bombMap)
+    const newuserInputs = structuredClone(userInputs);
+    event.preventDefault();
+    if (x >= 0 && x < 9 && y >= 0 && y < 9) {
+      if (newuserInputs[y][x] === -1) {
+        newuserInputs[y][x] = -2;
+      }
+    }
+
+    setuserInputs(newuserInputs);
+  };
+
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
@@ -218,7 +230,7 @@ const Home = () => {
     newNewSampleBoard[y][x] = 0;
     setuserInputs(newNewSampleBoard);
     setA(1); // aの更新
-
+    // console.log('aiueooooooo');
     // console.log(`a:${a}`);
     console.log(newbombMap);
   };
@@ -243,13 +255,26 @@ const Home = () => {
         {bombMap.map((row, y) => (
           <div key={y} className={styles.row}>
             {row.map((cell, x) => (
-              <div key={x} className={styles.cell} onClick={() => clickHandler(x, y)}>
+              <div
+                key={x}
+                className={styles.cell}
+                onClick={() => clickHandler(x, y)}
+                onContextMenu={(event) => Rclick(x, y, event)}
+              >
                 <div
-                  className={userInputs[y][x] === -1 ? styles.rock : styles.sampleStyle}
+                  className={
+                    userInputs[y][x] === -1
+                      ? styles.rock
+                      : userInputs[y][x] === 0
+                        ? styles.sampleStyle
+                        : styles.rock && styles.sampleStyle
+                  }
                   style={
                     userInputs[y][x] === -1
                       ? undefined
-                      : { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
+                      : userInputs[y][x] === 0
+                        ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
+                        : { backgroundPosition: `${-30 * 9}px 0px` }
                   }
                 />
               </div>
