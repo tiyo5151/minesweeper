@@ -175,6 +175,8 @@ const Home = () => {
     if (x >= 0 && x < 9 && y >= 0 && y < 9) {
       if (newuserInputs[y][x] === -1) {
         newuserInputs[y][x] = -2;
+      } else if (newuserInputs[y][x] === -2) {
+        newuserInputs[y][x] = -1;
       }
     }
 
@@ -184,8 +186,11 @@ const Home = () => {
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
-    // const newsamplepos = structuredClone(userInputs);
+    const newsamplepos = structuredClone(userInputs);
 
+    if (newsamplepos[y][x] === -2) {
+      return;
+    }
     if (a === 0) {
       const cells = [];
 
