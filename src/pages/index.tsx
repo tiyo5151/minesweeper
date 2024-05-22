@@ -68,6 +68,8 @@ const Home = () => {
 
   // console.log(userInputs);
 
+  let face = 11;
+
   useEffect(() => {
     let interval: number | undefined;
 
@@ -182,15 +184,6 @@ const Home = () => {
     setuserInputs(newuserInputs);
   };
 
-  // const flagcount = () => {
-  //   const newuserInputs = structuredClone(userInputs);
-  //   for (let x = 0; x < 9; x++) {
-  //     for (let y = 0; y < 9; y++) {
-  //       const result = newuserInputs.filter(([x, y]) => newuserInputs[y][x] === -2);
-  //     }
-  //   }
-  // };
-
   const countflag = () => {
     let count = 0;
     for (const row of userInputs) {
@@ -249,6 +242,9 @@ const Home = () => {
       setstart(true);
       setbombMap(newbombMap);
     }
+    if (newbombMap[y][x] === 11) {
+      face = 13;
+    }
     const newNewSampleBoard = spread(x, y, newbombMap, userInputs);
     newNewSampleBoard[y][x] = 0;
     setuserInputs(newNewSampleBoard);
@@ -265,7 +261,7 @@ const Home = () => {
         <div className={styles.threebase}>
           <button
             className={styles.sampleStyle}
-            style={{ backgroundPosition: `${-30 * 11}px 0px` }}
+            style={{ backgroundPosition: `${-30 * face}px 0px` }}
             onClick={() => reset()}
           />
         </div>
