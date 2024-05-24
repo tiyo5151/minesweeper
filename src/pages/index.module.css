@@ -106,3 +106,7 @@
   background-color: #f22;
   border: 5px solid #f22;
 }
+
+.button {
+  display: inline-block;
+}

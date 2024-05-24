@@ -284,6 +284,18 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
+      <button className={styles.button}>
+        <b>初級</b>
+      </button>
+      <button className={styles.button}>
+        <b>中級</b>
+      </button>
+      <button className={styles.button}>
+        <b>上級</b>
+      </button>
+      <button className={styles.button}>
+        <b>カスタム</b>
+      </button>
       <div className={styles.overbombMap1}>
         <div className={styles.threebase}>
           <div className={styles.countbase}>{flagnumber}</div>
