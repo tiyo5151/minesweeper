@@ -211,7 +211,7 @@ const Home = () => {
   };
   const flagnumber = 10 - countflag();
 
-  const clear = () => {
+  const clear = (bombmap: number[][], userInputs: number[][]) => {
     let count2 = 0;
     for (let x = 0; x < 9; x++) {
       for (let y = 0; y < 9; y++) {
@@ -225,9 +225,9 @@ const Home = () => {
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
     const newbombMap = structuredClone(bombMap);
-    const newsamplepos = structuredClone(userInputs);
+    const newuserInputs = structuredClone(userInputs);
 
-    if (newsamplepos[y][x] === -2) {
+    if (newuserInputs[y][x] === -2) {
       return;
     }
     if (a === 0) {
@@ -270,8 +270,9 @@ const Home = () => {
       setstart(true);
       setbombMap(newbombMap);
     }
-    const newNewSampleBoard = spread(x, y, newbombMap, userInputs);
+    const newNewSampleBoard = spread(x, y, newbombMap, newuserInputs);
     newNewSampleBoard[y][x] = 0;
+    clear(newNewSampleBoard, newuserInputs);
     setuserInputs(newNewSampleBoard);
     setA(1); // aの更新
     // console.log(`a:${a}`);
