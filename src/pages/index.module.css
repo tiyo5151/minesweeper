@@ -124,6 +124,12 @@
 
 .customContainer {
   display: flex;
+  gap: 75px;
+  background-color: #181a1b;
+}
+
+.customContainer2 {
+  display: flex;
   gap: 30px;
-  background-color: aliceblue;
+  background-color: #181a1b;
 }

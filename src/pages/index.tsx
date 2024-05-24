@@ -48,7 +48,7 @@ const Home = () => {
 
   const [clickedBomb, setClickedBomb] = useState<{ x: number; y: number } | null>(null);
 
-  console.log(face);
+  // console.log(face);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -83,9 +83,9 @@ const Home = () => {
     setnumbomb(numbomb);
   };
 
-  const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
+  const spread = (x: number, y: number, bombMap: number[][], useInputs: number[][]) => {
     const newbombMap = structuredClone(bombMap);
-    const newsamplepos = structuredClone(samplepos);
+    const newuserInputs = structuredClone(useInputs);
     console.log(newbombMap);
     console.log('spread 関数が呼び出されました。入力:', x, y);
 
@@ -95,20 +95,20 @@ const Home = () => {
       if (x >= 0 && x < width && y >= 0 && y < height) {
         if (newbombMap[y][x] === 0) {
           spreadtospread(x, y, bombMap, userInputs);
-          newsamplepos[y][x] = 0;
+          newuserInputs[y][x] = 0;
         }
       } else if (newbombMap[y][x] !== 11) {
-        newsamplepos[y][x] = 0;
+        newuserInputs[y][x] = 0;
       }
     }
     for (let i = 0; i < Result.length; i++) {
       const [by, bx] = Result[i];
-      newsamplepos[by][bx] = 0;
+      newuserInputs[by][bx] = 0;
       for (const [dx, dy] of directions) {
         const cx = bx + dx;
         const cy = by + dy;
         if (cx >= 0 && cx < width && cy >= 0 && cy < height) {
-          newsamplepos[cy][cx] = 0;
+          newuserInputs[cy][cx] = 0;
         }
       }
     }
@@ -117,21 +117,21 @@ const Home = () => {
       for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
           if (newbombMap[i][j] === 11) {
-            newsamplepos[i][j] = 0;
+            newuserInputs[i][j] = 0;
           }
         }
       }
       setClickedBomb({ x, y });
       setstart(false);
     }
-    // setuserInputs(newsamplepos)
-    return newsamplepos;
-    // console.log(newsamplepos);
+    // setuserInputs(newuserInputs)
+    return newuserInputs;
+    // console.log(newuserInputs);
   };
 
-  const spreadtospread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
+  const spreadtospread = (x: number, y: number, bombMap: number[][], useInputs: number[][]) => {
     const newbombMap = structuredClone(bombMap);
-    const newsamplepos = structuredClone(samplepos);
+    const newuserInputs = structuredClone(useInputs);
     const temporaryResult = [];
     for (const [dx, dy] of directions) {
       const rx = x + dx;
@@ -142,13 +142,27 @@ const Home = () => {
           temporaryResult.push([rx, ry]);
           // console.log(temporaryResult);
           Result.push([ry, rx]);
-          spread(rx, ry, newbombMap, newsamplepos);
+          spread(rx, ry, newbombMap, newuserInputs);
         }
       } else {
         continue;
       }
     }
     console.log(Result);
+  };
+
+  const clear = (userInputs: number[][], bombMap: number[][]) => {
+    let count2 = 0;
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
+        userInputs[y][x] === 0 && bombMap[y][x] !== 11 ? count2++ : undefined;
+      }
+    }
+    if (count2 === height * width - numbomb) {
+      setface(1);
+      setstart(false);
+    }
+    console.log(`count${count2}`);
   };
 
   const reset = () => {
@@ -193,20 +207,6 @@ const Home = () => {
   };
 
   const flagnumber = numbomb - countflag();
-
-  const clear = (bombmap: number[][], userInputs: number[][]) => {
-    let count2 = 1;
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        userInputs[y][x] === 0 && bombMap[y][x] !== 11 ? count2++ : undefined;
-      }
-    }
-    if (count2 === width * height - numbomb) {
-      setface(1);
-      setstart(false);
-    }
-    console.log(`count${count2}`);
-  };
 
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
@@ -258,11 +258,11 @@ const Home = () => {
     }
     const newNewSampleBoard = spread(x, y, newbombMap, newuserInputs);
     newNewSampleBoard[y][x] = 0;
-    clear(newNewSampleBoard, newuserInputs);
     setuserInputs(newNewSampleBoard);
     setA(1); // aの更新
     // console.log(`a:${a}`);
     console.log(newbombMap);
+    clear(newNewSampleBoard, newbombMap);
   };
 
   return (
@@ -282,6 +282,11 @@ const Home = () => {
         </button>
       </div>
       <div className={styles.customContainer}>
+        <p>縦</p>
+        <p>横</p>
+        <p>爆弾</p>
+      </div>
+      <div className={styles.customContainer2}>
         <input
           type="number"
           required
@@ -302,7 +307,7 @@ const Home = () => {
           type="number"
           required
           min="1"
-          max="100"
+          max="99"
           value={numbomb}
           onChange={(event) => setnumbomb(event.target.valueAsNumber)}
         />
