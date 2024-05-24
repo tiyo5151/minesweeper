@@ -13,47 +13,21 @@ const directions = [
 ];
 
 const Home = () => {
-  // const Board = [
-  // [-1, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  // ];
-  const [userInputs, setuserInputs] = useState([
-    //useState[Board]で簡素化するコード調整必要
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  ]);
+  const [height, setheight] = useState(1);
 
+  const [width, setwidth] = useState(1);
+
+  const [userInputs, setuserInputs] = useState(
+    Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1)),
+  );
   // -3:rock+question
   // -2:rock+flag
   // -1:rock
   // 0:none
 
-  const [bombMap, setbombMap] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
-
+  const [bombMap, setbombMap] = useState(
+    Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1)),
+  );
   // 0:none
   // 1~8:number
   // 11:bomb
@@ -90,6 +64,10 @@ const Home = () => {
 
   console.log(time);
 
+  const changeboard = (height: number, width: number) => {
+    setbombMap(Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1)));
+    setuserInputs(Array.from({ length: 9 * height }, () => Array(9 * width).fill(0)));
+  };
   const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
     const newbombMap = structuredClone(bombMap);
     const newsamplepos = structuredClone(samplepos);
@@ -195,7 +173,7 @@ const Home = () => {
     if (face === 1 || face === 2) {
       return;
     }
-    if (x >= 0 && x < 9 && y >= 0 && y < 9) {
+    if (x >= 0 && x < 9 * width && y >= 0 && y < 9 * height) {
       if (newuserInputs[y][x] === -1) {
         newuserInputs[y][x] = -2;
       } else if (newuserInputs[y][x] === -2) {
@@ -216,12 +194,15 @@ const Home = () => {
 
   const clear = (bombmap: number[][], userInputs: number[][]) => {
     let count2 = 1;
-    for (let x = 0; x < 9; x++) {
-      for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9 * width; x++) {
+      for (let y = 0; y < 9 * height; y++) {
         userInputs[y][x] === 0 && bombMap[y][x] !== 11 ? count2++ : undefined;
       }
     }
-    count2 === 71 ? setface(1) && setstart(false) : undefined;
+    if (count2 === 9 * width * 9 * height - 10) {
+      setface(1);
+      setstart(false);
+    }
     console.log(`count${count2}`);
   };
 
@@ -236,8 +217,8 @@ const Home = () => {
     if (a === 0) {
       const cells = [];
 
-      for (let x = 0; x < 9; x++) {
-        for (let y = 0; y < 9; y++) {
+      for (let x = 0; x < 9 * width; x++) {
+        for (let y = 0; y < 9 * height; y++) {
           cells.push([x, y]);
         }
       }
@@ -256,14 +237,20 @@ const Home = () => {
         const [dx, dy] = filteredCells[i];
         newbombMap[dy][dx] = 11;
       }
-      for (let x = 0; x < 9; x++) {
-        for (let y = 0; y < 9; y++)
+      for (let x = 0; x < 9 * width; x++) {
+        for (let y = 0; y < 9 * height; y++)
           if (newbombMap[y][x] !== 11) {
             let NumBer = 0;
             for (const [dx, dy] of directions) {
               const nx = x + dx;
               const ny = y + dy;
-              if (nx >= 0 && nx < 9 && ny >= 0 && ny < 9 && newbombMap[ny][nx] === 11) {
+              if (
+                nx >= 0 &&
+                nx < 9 * width &&
+                ny >= 0 &&
+                ny < 9 * height &&
+                newbombMap[ny][nx] === 11
+              ) {
                 NumBer++;
               }
             }
@@ -284,18 +271,25 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <button className={styles.button}>
-        <b>初級</b>
-      </button>
-      <button className={styles.button}>
-        <b>中級</b>
-      </button>
-      <button className={styles.button}>
-        <b>上級</b>
-      </button>
-      <button className={styles.button}>
-        <b>カスタム</b>
-      </button>
+      <div className={styles.buttonContainer}>
+        <button className={styles.button} onClick={() => changeboard(1, 1)}>
+          <b>初級</b>
+        </button>
+        <button className={styles.button} onClick={() => changeboard(16 / 9, 16 / 9)}>
+          <b>中級</b>
+        </button>
+        <button className={styles.button} onClick={() => changeboard(16 / 9, 30 / 9)}>
+          <b>上級</b>
+        </button>
+        <button className={styles.button} onClick={() => changeboard(rate1 / 9, rate2 / 9)}>
+          <b>カスタム</b>
+        </button>
+      </div>
+      <div className={styles.customContainer}>
+        <input type="number" required min="1" max="100" />
+        <input type="number" required min="1" max="100" />
+        <input type="number" required min="1" max="100" />
+      </div>
       <div className={styles.overbombMap1}>
         <div className={styles.threebase}>
           <div className={styles.countbase}>{flagnumber}</div>
@@ -311,6 +305,7 @@ const Home = () => {
           <div className={styles.countbase}>{time}</div>
         </div>
       </div>
+
       <div className={styles.bombMap}>
         {bombMap.map((row, y) => (
           <div key={y} className={styles.row}>

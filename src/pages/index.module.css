@@ -18,8 +18,9 @@
 .bombMap {
   display: flex;
   flex-direction: column;
-  width: 360px;
-  height: 360px;
+
+  /* width: 360px;
+  height: 360px; */
   background-color: #c6c6c6;
 
   /* border-bottom: solid 50px #b2b2b2; */
@@ -108,5 +109,21 @@
 }
 
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 35px;
+  font-size: 9px;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 5px;
+}
+
+.customContainer {
+  display: flex;
+  gap: 30px;
+  background-color: aliceblue;
 }
