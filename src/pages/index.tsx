@@ -322,12 +322,12 @@ const Home = () => {
           <div className={styles.lastline}>
             <div className={styles.worldboard}>
               <div className={styles.overbombMap1}>
-                <div className={width > 3 ? styles.threebase : styles.hidden}>
-                  <div className={width > 3 ? styles.countbase : styles.hidden}>
+                <div className={width > 3 ? styles.threebase : undefined}>
+                  <div className={width > 3 ? styles.countbase : undefined}>
                     {width > 3 ? flagnumber : undefined}
                   </div>
                 </div>
-                <div className={width > 8 ? styles.threebase : styles.hidden}>
+                <div className={width > 8 ? styles.threebase : undefined}>
                   {width > 8 && (
                     <div className={styles.aroundbutton}>
                       <button onClick={() => reset()}>
@@ -343,8 +343,8 @@ const Home = () => {
                     </div>
                   )}
                 </div>
-                <div className={width > 5 ? styles.threebase : styles.hidden}>
-                  <div className={width > 5 ? styles.countbase : styles.hidden}>
+                <div className={width > 5 ? styles.threebase : undefined}>
+                  <div className={width > 5 ? styles.countbase : undefined}>
                     {width > 5 ? time : undefined}
                   </div>
                 </div>
