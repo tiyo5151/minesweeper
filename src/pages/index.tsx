@@ -17,6 +17,10 @@ const Home = () => {
 
   const [width, setwidth] = useState(1);
 
+  const [magbomb, setmagbomb] = useState(1);
+
+  const [a, setA] = useState(0);
+
   const [userInputs, setuserInputs] = useState(
     Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1)),
   );
@@ -31,8 +35,6 @@ const Home = () => {
   // 0:none
   // 1~8:number
   // 11:bomb
-
-  const [a, setA] = useState(0);
 
   const [time, settime] = useState(0);
 
@@ -64,10 +66,14 @@ const Home = () => {
 
   console.log(time);
 
-  const changeboard = (height: number, width: number) => {
-    setbombMap(Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1)));
-    setuserInputs(Array.from({ length: 9 * height }, () => Array(9 * width).fill(0)));
+  const changeboard = (height: number, width: number, magbomb: number) => {
+    setbombMap(Array.from({ length: 9 * height }, () => Array(9 * width).fill(0)));
+    setuserInputs(Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1)));
+    setheight(height);
+    setwidth(width);
+    setmagbomb(magbomb);
   };
+
   const spread = (x: number, y: number, bombMap: number[][], samplepos: number[][]) => {
     const newbombMap = structuredClone(bombMap);
     const newsamplepos = structuredClone(samplepos);
@@ -77,7 +83,7 @@ const Home = () => {
     if (newbombMap[y][x] === 0) {
       console.log('反応！');
 
-      if (x >= 0 && x < 9 && y >= 0 && y < 9) {
+      if (x >= 0 && x < 9 * width && y >= 0 && y < 9 * height) {
         if (newbombMap[y][x] === 0) {
           spreadtospread(x, y, bombMap, userInputs);
           newsamplepos[y][x] = 0;
@@ -92,15 +98,15 @@ const Home = () => {
       for (const [dx, dy] of directions) {
         const cx = bx + dx;
         const cy = by + dy;
-        if (cx >= 0 && cx < 9 && cy >= 0 && cy < 9) {
+        if (cx >= 0 && cx < 9 * width && cy >= 0 && cy < 9 * height) {
           newsamplepos[cy][cx] = 0;
         }
       }
     }
     if (newbombMap[y][x] === 11) {
       setface(2);
-      for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
+      for (let i = 0; i < 9 * height; i++) {
+        for (let j = 0; j < 9 * width; j++) {
           if (newbombMap[i][j] === 11) {
             newsamplepos[i][j] = 0;
           }
@@ -122,7 +128,7 @@ const Home = () => {
       const rx = x + dx;
       const ry = y + dy;
       console.log('rx,ry:', rx, ry);
-      if (rx >= 0 && rx < 9 && ry >= 0 && ry < 9) {
+      if (rx >= 0 && rx < 9 * width && ry >= 0 && ry < 9 * height) {
         if (newbombMap[ry][rx] === 0 && !Result.some(([i, j]) => i === ry && j === rx)) {
           temporaryResult.push([rx, ry]);
           // console.log(temporaryResult);
@@ -136,36 +142,34 @@ const Home = () => {
     console.log(Result);
   };
 
+  // const reset = () => {
+  //   setA(0);
+  //   settime(0);
+  //   setstart(false);
+  //   setface(0);
+  //   setClickedBomb(null);
+  //   setuserInputs([Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1))]);
+  //   setbombMap([Array.from({ length: 9 * height }, () => Array(9 * width).fill(0))]);
+  //   console.log(`useInputs:${userInputs}`);
+  //   console.log(`bombmap:${bombMap}`);
+  // };
+
   const reset = () => {
     setA(0);
     settime(0);
     setstart(false);
     setface(0);
     setClickedBomb(null);
-    setuserInputs([
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-      [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    ]);
-    setbombMap([
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]);
-  };
 
+    const newUserInputs = Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1));
+    const newBombMap = Array.from({ length: 9 * height }, () => Array(9 * width).fill(0));
+
+    setuserInputs(newUserInputs);
+    setbombMap(newBombMap);
+
+    console.log(`userInputs:`, newUserInputs);
+    console.log(`bombMap:`, newBombMap);
+  };
   const Rclick = (x: number, y: number, event: React.MouseEvent<HTMLDivElement>) => {
     // const newbombmap = structuredClone(bombMap)
     const newuserInputs = structuredClone(userInputs);
@@ -190,6 +194,7 @@ const Home = () => {
     }
     return count;
   };
+
   const flagnumber = 10 - countflag();
 
   const clear = (bombmap: number[][], userInputs: number[][]) => {
@@ -233,7 +238,7 @@ const Home = () => {
 
       const filteredCells = cells.filter(([cx, cy]) => !(cx === x && cy === y));
       // console.log(filteredCells);
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 10 * magbomb; i++) {
         const [dx, dy] = filteredCells[i];
         newbombMap[dy][dx] = 11;
       }
@@ -272,16 +277,16 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.buttonContainer}>
-        <button className={styles.button} onClick={() => changeboard(1, 1)}>
+        <button className={styles.button} onClick={() => changeboard(1, 1, 1)}>
           <b>初級</b>
         </button>
-        <button className={styles.button} onClick={() => changeboard(16 / 9, 16 / 9)}>
+        <button className={styles.button} onClick={() => changeboard(16 / 9, 16 / 9, 4)}>
           <b>中級</b>
         </button>
-        <button className={styles.button} onClick={() => changeboard(16 / 9, 30 / 9)}>
+        <button className={styles.button} onClick={() => changeboard(16 / 9, 30 / 9, 99 / 10)}>
           <b>上級</b>
         </button>
-        <button className={styles.button} onClick={() => changeboard(rate1 / 9, rate2 / 9)}>
+        <button className={styles.button}>
           <b>カスタム</b>
         </button>
       </div>
@@ -290,7 +295,7 @@ const Home = () => {
         <input type="number" required min="1" max="100" />
         <input type="number" required min="1" max="100" />
       </div>
-      <div className={styles.overbombMap1}>
+      <div className={styles.overbombMap1} style={{ width: `${40 * 9 * width}px` }}>
         <div className={styles.threebase}>
           <div className={styles.countbase}>{flagnumber}</div>
         </div>
@@ -305,7 +310,6 @@ const Home = () => {
           <div className={styles.countbase}>{time}</div>
         </div>
       </div>
-
       <div className={styles.bombMap}>
         {bombMap.map((row, y) => (
           <div key={y} className={styles.row}>
@@ -327,11 +331,13 @@ const Home = () => {
                           : styles.fusion
                   }
                   style={
-                    userInputs[y][x] === -1
-                      ? undefined
-                      : userInputs[y][x] === 0
-                        ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
-                        : { backgroundPosition: `${-30 * 9}px 0px` }
+                    clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                      ? { backgroundPosition: `${-30 * 10}px 0px ` }
+                      : userInputs[y][x] === -1
+                        ? undefined
+                        : userInputs[y][x] === 0
+                          ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
+                          : { backgroundPosition: `${-30 * 9}px 0px` }
                   }
                 />
               </div>

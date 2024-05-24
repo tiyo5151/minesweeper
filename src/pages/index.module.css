@@ -28,8 +28,8 @@
 
 .overbombMap1 {
   display: flex;
-  width: 360px;
-  height: 120px;
+  align-items: center;
+  justify-content: center;
   background-color: #c6c6c6;
 }
 
