@@ -21,17 +21,13 @@ const Home = () => {
 
   const [a, setA] = useState(0);
 
-  const [userInputs, setuserInputs] = useState(
-    Array.from({ length: height }, () => Array(width).fill(-1)),
-  );
+  const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
   // -3:rock+question
   // -2:rock+flag
   // -1:rock
   // 0:none
 
-  const [bombMap, setbombMap] = useState(
-    Array.from({ length: height }, () => Array(width).fill(-1)),
-  );
+  const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
   // 0:none
   // 1~8:number
   // 11:bomb
@@ -282,9 +278,9 @@ const Home = () => {
         </button>
       </div>
       <div className={styles.customContainer}>
-        <p>縦</p>
-        <p>横</p>
-        <p>爆弾</p>
+        <p style={{ color: 'white' }}>縦</p>
+        <p style={{ color: 'white' }}>横</p>
+        <p style={{ color: 'white' }}>爆弾</p>
       </div>
       <div className={styles.customContainer2}>
         <input
@@ -312,55 +308,67 @@ const Home = () => {
           onChange={(event) => setnumbomb(event.target.valueAsNumber)}
         />
       </div>
-      <div className={styles.overbombMap1} style={{ width: `${40 * width}px` }}>
-        <div className={styles.threebase}>
-          <div className={styles.countbase}>{flagnumber}</div>
-        </div>
-        <div className={styles.threebase}>
-          <button
-            className={styles.sampleStyle}
-            style={{ backgroundPosition: `${-30 * (11 + face)}px 0px` }}
-            onClick={() => reset()}
-          />
-        </div>
-        <div className={styles.threebase}>
-          <div className={styles.countbase}>{time}</div>
-        </div>
-      </div>
-      <div className={styles.bombMap}>
-        {bombMap.map((row, y) => (
-          <div key={y} className={styles.row}>
-            {row.map((cell, x) => (
-              <div
-                key={x}
-                className={styles.cell}
-                onClick={() => clickHandler(x, y)}
-                onContextMenu={(event) => Rclick(x, y, event)}
-              >
-                <div
-                  className={
-                    clickedBomb && clickedBomb.x === x && clickedBomb.y === y
-                      ? styles.redbomb
-                      : userInputs[y][x] === -1
-                        ? styles.rock
-                        : userInputs[y][x] === 0
-                          ? styles.sampleStyle
-                          : styles.fusion
-                  }
-                  style={
-                    clickedBomb && clickedBomb.x === x && clickedBomb.y === y
-                      ? { backgroundPosition: `${-30 * 10}px 0px ` }
-                      : userInputs[y][x] === -1
-                        ? undefined
-                        : userInputs[y][x] === 0
-                          ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
-                          : { backgroundPosition: `${-30 * 9}px 0px` }
-                  }
-                />
+
+      <div className={styles.mostoverline}>
+        <div className={styles.middiumline}>
+          <div className={styles.lastline}>
+            <div className={styles.overbombMap1} style={{ width: `${40 * width}px` }}>
+              <div className={styles.threebase}>
+                <div className={styles.countbase}>{flagnumber}</div>
               </div>
-            ))}
+              <div className={styles.threebase}>
+                <div className={styles.aroundbutton}>
+                  <button
+                    className={styles.sampleStyle}
+                    style={{ backgroundPosition: `${-30 * (11 + face)}px 0px`, color: '#c6c6c6' }}
+                    onClick={() => reset()}
+                  />
+                </div>
+              </div>
+              <div className={styles.threebase}>
+                <div className={styles.countbase}>{time}</div>
+              </div>
+            </div>
+            <div className={styles.line1} />
+            <div className={styles.line2} />
+            <div className={styles.line3} />
+            <div className={styles.bombMap}>
+              {bombMap.map((row, y) => (
+                <div key={y} className={styles.row}>
+                  {row.map((cell, x) => (
+                    <div
+                      key={x}
+                      className={styles.cell}
+                      onClick={() => clickHandler(x, y)}
+                      onContextMenu={(event) => Rclick(x, y, event)}
+                    >
+                      <div
+                        className={
+                          clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                            ? styles.redbomb
+                            : userInputs[y][x] === -1
+                              ? styles.rock
+                              : userInputs[y][x] === 0
+                                ? styles.sampleStyle
+                                : styles.fusion
+                        }
+                        style={
+                          clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                            ? { backgroundPosition: `${-30 * 10}px 0px ` }
+                            : userInputs[y][x] === -1
+                              ? undefined
+                              : userInputs[y][x] === 0
+                                ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
+                                : { backgroundPosition: `${-30 * 9}px 0px` }
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
