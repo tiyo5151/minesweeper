@@ -192,6 +192,9 @@ const Home = () => {
     // const newbombmap = structuredClone(bombMap)
     const newuserInputs = structuredClone(userInputs);
     event.preventDefault();
+    if (face === 1 || face === 2) {
+      return;
+    }
     if (x >= 0 && x < 9 && y >= 0 && y < 9) {
       if (newuserInputs[y][x] === -1) {
         newuserInputs[y][x] = -2;
@@ -227,7 +230,7 @@ const Home = () => {
     const newbombMap = structuredClone(bombMap);
     const newuserInputs = structuredClone(userInputs);
 
-    if (newuserInputs[y][x] === -2) {
+    if (newuserInputs[y][x] === -2 || face === 1 || face === 2) {
       return;
     }
     if (a === 0) {
