@@ -282,7 +282,7 @@ const Home = () => {
           <b>上級</b>
         </button>
         <button className={styles.button} onClick={() => changeboard(rate1, rate2, rate3)}>
-          <b>カスタム</b>
+          <b>カスタム(更新)</b>
         </button>
       </div>
       <div className={styles.customContainer}>
@@ -320,65 +320,73 @@ const Home = () => {
       <div className={styles.mostoverline}>
         <div className={styles.middiumline}>
           <div className={styles.lastline}>
-            <div className={styles.overbombMap1} style={{ width: `${40 * width}px` }}>
-              <div className={styles.threebase}>
-                <div className={styles.countbase}>{flagnumber}</div>
-              </div>
-              <div className={styles.threebase}>
-                <div className={styles.aroundbutton}>
-                  <button onClick={() => reset()}>
-                    <div className={styles.button2}>
-                      <div
-                        className={styles.sampleStyle}
-                        style={{
-                          backgroundPosition: `${-30 * (11 + face)}px 0px`,
-                        }}
-                      />
+            <div className={styles.worldboard}>
+              <div className={styles.overbombMap1}>
+                <div className={width > 3 ? styles.threebase : styles.hidden}>
+                  <div className={width > 3 ? styles.countbase : styles.hidden}>
+                    {width > 3 ? flagnumber : undefined}
+                  </div>
+                </div>
+                <div className={width > 8 ? styles.threebase : styles.hidden}>
+                  {width > 8 && (
+                    <div className={styles.aroundbutton}>
+                      <button onClick={() => reset()}>
+                        <div className={styles.button2}>
+                          <div
+                            className={styles.sampleStyle}
+                            style={{
+                              backgroundPosition: `${-30 * (11 + face)}px 0px`,
+                            }}
+                          />
+                        </div>
+                      </button>
                     </div>
-                  </button>
+                  )}
+                </div>
+                <div className={width > 5 ? styles.threebase : styles.hidden}>
+                  <div className={width > 5 ? styles.countbase : styles.hidden}>
+                    {width > 5 ? time : undefined}
+                  </div>
                 </div>
               </div>
-              <div className={styles.threebase}>
-                <div className={styles.countbase}>{time}</div>
-              </div>
-            </div>
-            <div className={styles.line1} />
-            <div className={styles.line2} />
-            <div className={styles.line3} />
-            <div className={styles.bombMap}>
-              {bombMap.map((row, y) => (
-                <div key={y} className={styles.row}>
-                  {row.map((cell, x) => (
-                    <div
-                      key={x}
-                      className={styles.cell}
-                      onClick={() => clickHandler(x, y)}
-                      onContextMenu={(event) => Rclick(x, y, event)}
-                    >
+              <div className={styles.line1} />
+              <div className={styles.line2} />
+              <div className={styles.line3} />
+              <div className={styles.bombMap}>
+                {bombMap.map((row, y) => (
+                  <div key={y} className={styles.row}>
+                    {row.map((cell, x) => (
                       <div
-                        className={
-                          clickedBomb && clickedBomb.x === x && clickedBomb.y === y
-                            ? styles.redbomb
-                            : userInputs[y][x] === -1
-                              ? styles.rock
-                              : userInputs[y][x] === 0
-                                ? styles.sampleStyle
-                                : styles.fusion
-                        }
-                        style={
-                          clickedBomb && clickedBomb.x === x && clickedBomb.y === y
-                            ? { backgroundPosition: `${-30 * 10}px 0px ` }
-                            : userInputs[y][x] === -1
-                              ? undefined
-                              : userInputs[y][x] === 0
-                                ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
-                                : { backgroundPosition: `${-30 * 9}px 0px` }
-                        }
-                      />
-                    </div>
-                  ))}
-                </div>
-              ))}
+                        key={x}
+                        className={styles.cell}
+                        onClick={() => clickHandler(x, y)}
+                        onContextMenu={(event) => Rclick(x, y, event)}
+                      >
+                        <div
+                          className={
+                            clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                              ? styles.redbomb
+                              : userInputs[y][x] === -1
+                                ? styles.rock
+                                : userInputs[y][x] === 0
+                                  ? styles.sampleStyle
+                                  : styles.fusion
+                          }
+                          style={
+                            clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                              ? { backgroundPosition: `${-30 * 10}px 0px ` }
+                              : userInputs[y][x] === -1
+                                ? undefined
+                                : userInputs[y][x] === 0
+                                  ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
+                                  : { backgroundPosition: `${-30 * 9}px 0px` }
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

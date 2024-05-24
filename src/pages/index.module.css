@@ -138,6 +138,7 @@
 .mostoverline {
   display: flex;
   flex-direction: column;
+  width: auto;
   border: 10px solid;
   border-color: #e5e5e5 #737373 #737373 #e5e5e5;
 }
@@ -145,6 +146,7 @@
 .middiumline {
   display: flex;
   flex-direction: column;
+  width: auto;
   border: 20px solid;
   border-color: #b2b2b2;
 }
@@ -152,6 +154,7 @@
 .lastline {
   display: flex;
   flex-direction: column;
+  width: auto;
   border: 10px solid;
   border-color: #737373 #e5e5e5 #e5e5e5 #737373;
 }
@@ -176,4 +179,11 @@
   flex-direction: column;
   border: 1px solid;
   border-color: #737373;
+}
+
+.worldboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: auto;
 }
