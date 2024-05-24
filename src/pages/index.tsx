@@ -157,6 +157,14 @@ const Home = () => {
     if (count2 === height * width - numbomb) {
       setface(1);
       setstart(false);
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          if (bombMap[i][j] === 11) {
+            userInputs[i][j] = -2;
+          }
+        }
+      }
+      setuserInputs(userInputs);
     }
     console.log(`count${count2}`);
   };
@@ -318,11 +326,16 @@ const Home = () => {
               </div>
               <div className={styles.threebase}>
                 <div className={styles.aroundbutton}>
-                  <button
-                    className={styles.sampleStyle}
-                    style={{ backgroundPosition: `${-30 * (11 + face)}px 0px`, color: '#c6c6c6' }}
-                    onClick={() => reset()}
-                  />
+                  <button onClick={() => reset()}>
+                    <div className={styles.button2}>
+                      <div
+                        className={styles.sampleStyle}
+                        style={{
+                          backgroundPosition: `${-30 * (11 + face)}px 0px`,
+                        }}
+                      />
+                    </div>
+                  </button>
                 </div>
               </div>
               <div className={styles.threebase}>

@@ -108,6 +108,15 @@
   font-size: 9px;
 }
 
+.button2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #b2b2b2;
+  border: 8px solid;
+  border-color: #e5e5e5 #737373 #737373 #e5e5e5;
+}
+
 .buttonContainer {
   display: flex;
   gap: 5px;
@@ -165,6 +174,6 @@
 .aroundbutton {
   display: flex;
   flex-direction: column;
-  border: 5px solid;
-  border-color: #e5e5e5 #737373 #737373 #e5e5e5;
+  border: 1px solid;
+  border-color: #737373;
 }
