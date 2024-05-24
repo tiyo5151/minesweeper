@@ -212,13 +212,13 @@ const Home = () => {
   const flagnumber = 10 - countflag();
 
   const clear = (bombmap: number[][], userInputs: number[][]) => {
-    let count2 = 0;
+    let count2 = 1;
     for (let x = 0; x < 9; x++) {
       for (let y = 0; y < 9; y++) {
         userInputs[y][x] === 0 && bombMap[y][x] !== 11 ? count2++ : undefined;
       }
     }
-    count2 === 71 ? setface(1) : undefined;
+    count2 === 71 ? setface(1) && setstart(false) : undefined;
     console.log(`count${count2}`);
   };
 
