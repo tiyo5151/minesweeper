@@ -70,6 +70,8 @@ const Home = () => {
 
   const [face, setface] = useState(0);
 
+  const [clickedBomb, setClickedBomb] = useState<{ x: number; y: number } | null>(null);
+
   console.log(face);
 
   useEffect(() => {
@@ -126,6 +128,8 @@ const Home = () => {
           }
         }
       }
+      setClickedBomb({ x, y });
+      setstart(false);
     }
     // setuserInputs(newsamplepos)
     return newsamplepos;
@@ -159,6 +163,7 @@ const Home = () => {
     settime(0);
     setstart(false);
     setface(0);
+    setClickedBomb(null);
     setuserInputs([
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -204,8 +209,18 @@ const Home = () => {
     }
     return count;
   };
-
   const flagnumber = 10 - countflag();
+
+  const clear = () => {
+    let count2 = 0;
+    for (let x = 0; x < 9; x++) {
+      for (let y = 0; y < 9; y++) {
+        userInputs[y][x] === 0 && bombMap[y][x] !== 11 ? count2++ : undefined;
+      }
+    }
+    count2 === 71 ? setface(1) : undefined;
+    console.log(`count${count2}`);
+  };
 
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
@@ -292,11 +307,13 @@ const Home = () => {
               >
                 <div
                   className={
-                    userInputs[y][x] === -1
-                      ? styles.rock
-                      : userInputs[y][x] === 0
-                        ? styles.sampleStyle
-                        : styles.fusion
+                    clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                      ? styles.redbomb
+                      : userInputs[y][x] === -1
+                        ? styles.rock
+                        : userInputs[y][x] === 0
+                          ? styles.sampleStyle
+                          : styles.fusion
                   }
                   style={
                     userInputs[y][x] === -1
