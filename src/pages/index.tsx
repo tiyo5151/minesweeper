@@ -66,7 +66,16 @@ const Home = () => {
 
   console.log(time);
 
+  const rate1 = height / 9;
+  const rate2 = width / 9;
+  const rate3 = magbomb / 10;
+
   const changeboard = (height: number, width: number, magbomb: number) => {
+    setClickedBomb(null);
+    setface(0);
+    setstart(false);
+    settime(0);
+    setA(0);
     setbombMap(Array.from({ length: 9 * height }, () => Array(9 * width).fill(0)));
     setuserInputs(Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1)));
     setheight(height);
@@ -141,18 +150,6 @@ const Home = () => {
     }
     console.log(Result);
   };
-
-  // const reset = () => {
-  //   setA(0);
-  //   settime(0);
-  //   setstart(false);
-  //   setface(0);
-  //   setClickedBomb(null);
-  //   setuserInputs([Array.from({ length: 9 * height }, () => Array(9 * width).fill(-1))]);
-  //   setbombMap([Array.from({ length: 9 * height }, () => Array(9 * width).fill(0))]);
-  //   console.log(`useInputs:${userInputs}`);
-  //   console.log(`bombmap:${bombMap}`);
-  // };
 
   const reset = () => {
     setA(0);
@@ -286,14 +283,35 @@ const Home = () => {
         <button className={styles.button} onClick={() => changeboard(16 / 9, 30 / 9, 99 / 10)}>
           <b>上級</b>
         </button>
-        <button className={styles.button}>
+        <button className={styles.button} onClick={() => changeboard(rate1, rate2, rate3)}>
           <b>カスタム</b>
         </button>
       </div>
       <div className={styles.customContainer}>
-        <input type="number" required min="1" max="100" />
-        <input type="number" required min="1" max="100" />
-        <input type="number" required min="1" max="100" />
+        <input
+          type="number"
+          required
+          min="1"
+          max="100"
+          value={height}
+          onChange={(event) => setheight(event.target.valueAsNumber)}
+        />
+        <input
+          type="number"
+          required
+          min="1"
+          max="100"
+          value={width}
+          onChange={(event) => setwidth(event.target.valueAsNumber)}
+        />
+        <input
+          type="number"
+          required
+          min="1"
+          max="100"
+          value={magbomb}
+          onChange={(event) => setmagbomb(event.target.valueAsNumber)}
+        />
       </div>
       <div className={styles.overbombMap1} style={{ width: `${40 * 9 * width}px` }}>
         <div className={styles.threebase}>
