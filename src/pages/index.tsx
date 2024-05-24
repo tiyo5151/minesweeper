@@ -68,7 +68,9 @@ const Home = () => {
 
   // console.log(userInputs);
 
-  let face = 11;
+  const [face, setface] = useState(0);
+
+  console.log(face);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -115,6 +117,16 @@ const Home = () => {
         }
       }
     }
+    if (newbombMap[y][x] === 11) {
+      setface(2);
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (newbombMap[i][j] === 11) {
+            newsamplepos[i][j] = 0;
+          }
+        }
+      }
+    }
     // setuserInputs(newsamplepos)
     return newsamplepos;
     // console.log(newsamplepos);
@@ -146,6 +158,7 @@ const Home = () => {
     setA(0);
     settime(0);
     setstart(false);
+    setface(0);
     setuserInputs([
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
       [-1, -1, -1, -1, -1, -1, -1, -1, -1],
@@ -242,9 +255,6 @@ const Home = () => {
       setstart(true);
       setbombMap(newbombMap);
     }
-    if (newbombMap[y][x] === 11) {
-      face = 13;
-    }
     const newNewSampleBoard = spread(x, y, newbombMap, userInputs);
     newNewSampleBoard[y][x] = 0;
     setuserInputs(newNewSampleBoard);
@@ -252,6 +262,7 @@ const Home = () => {
     // console.log(`a:${a}`);
     console.log(newbombMap);
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.overbombMap1}>
@@ -261,7 +272,7 @@ const Home = () => {
         <div className={styles.threebase}>
           <button
             className={styles.sampleStyle}
-            style={{ backgroundPosition: `${-30 * face}px 0px` }}
+            style={{ backgroundPosition: `${-30 * (11 + face)}px 0px` }}
             onClick={() => reset()}
           />
         </div>
