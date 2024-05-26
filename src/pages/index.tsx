@@ -348,13 +348,13 @@ const Home = () => {
         className={styles.board}
         // style={{ width: 40 * width + 40 + 12, height: 40 * height + 120 + 12 }}
         style={{
-          width: save[1] > 8 ? `${40 * width + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
+          width: width > 8 ? `${40 * width + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
           height: 40 * height + 120 + 12,
         }}
       >
         <div
           className={styles.imformationboard}
-          style={{ width: save[1] > 8 ? `${40 * width}px` : `${40 * 9}px` }}
+          style={{ width: width > 8 ? `${40 * width}px` : `${40 * 9}px` }}
         >
           <div className={styles.countbase}>{flagnumber}</div>
           <button onClick={() => reset()}>
