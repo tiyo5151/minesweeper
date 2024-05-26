@@ -275,7 +275,6 @@ const Home = () => {
     <div className={styles.container}>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <button
-          className={styles.button}
           onClick={() => {
             changeboard(9, 9, 10);
             setsave([9, 9, 10]);
@@ -284,7 +283,6 @@ const Home = () => {
           <b>初級</b>
         </button>
         <button
-          className={styles.button}
           onClick={() => {
             changeboard(16, 16, 40);
             setsave([16, 16, 40]);
@@ -293,7 +291,6 @@ const Home = () => {
           <b>中級</b>
         </button>
         <button
-          className={styles.button}
           onClick={() => {
             changeboard(16, 30, 99);
             setsave([16, 30, 99]);
@@ -302,7 +299,6 @@ const Home = () => {
           <b>上級</b>
         </button>
         <button
-          className={styles.button}
           onClick={() => {
             changeboard(rate1, rate2, rate3);
             setsave([rate1, rate2, rate3]);
@@ -322,8 +318,7 @@ const Home = () => {
           <p>爆弾</p>
         </div>
       </div>
-
-      <div className={styles.customContainer2}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
         <input
           type="number"
           required
