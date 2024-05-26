@@ -64,9 +64,9 @@ const Home = () => {
 
   console.log(time);
 
-  const rate1 = height;
-  const rate2 = width;
-  const rate3 = numbomb;
+  const rate1 = save[0];
+  const rate2 = save[1];
+  const rate3 = save[2];
 
   const changeboard = (height: number, width: number, numbomb: number) => {
     setClickedBomb(null);
@@ -178,8 +178,8 @@ const Home = () => {
     setface(0);
     setClickedBomb(null);
 
-    const newUserInputs = Array.from({ length: save[0] }, () => Array(save[1]).fill(-1));
-    const newBombMap = Array.from({ length: save[0] }, () => Array(save[1]).fill(0));
+    const newUserInputs = Array.from({ length: height }, () => Array(width).fill(-1));
+    const newBombMap = Array.from({ length: height }, () => Array(width).fill(0));
 
     setuserInputs(newUserInputs);
     setbombMap(newBombMap);
@@ -324,37 +324,37 @@ const Home = () => {
           required
           min="1"
           max="100"
-          value={height}
-          onChange={(event) => setheight(event.target.valueAsNumber)}
+          value={save[0]}
+          onChange={(event) => setsave([event.target.valueAsNumber, save[1], save[2]])}
         />
         <input
           type="number"
           required
           min="1"
           max="100"
-          value={width}
-          onChange={(event) => setwidth(event.target.valueAsNumber)}
+          value={save[1]}
+          onChange={(event) => setsave([save[0], event.target.valueAsNumber, save[2]])}
         />
         <input
           type="number"
           required
           min="1"
           max="99"
-          value={numbomb}
-          onChange={(event) => setnumbomb(event.target.valueAsNumber)}
+          value={save[2]}
+          onChange={(event) => setsave([save[0], save[1], event.target.valueAsNumber])}
         />
       </div>
       <div
         className={styles.board}
         // style={{ width: 40 * width + 40 + 12, height: 40 * height + 120 + 12 }}
         style={{
-          width: save[1] > 8 ? `${40 * save[1] + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
-          height: 40 * save[0] + 120 + 12,
+          width: save[1] > 8 ? `${40 * width + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
+          height: 40 * height + 120 + 12,
         }}
       >
         <div
           className={styles.imformationboard}
-          style={{ width: save[1] > 8 ? `${40 * save[1]}px` : `${40 * 9}px` }}
+          style={{ width: save[1] > 8 ? `${40 * width}px` : `${40 * 9}px` }}
         >
           <div className={styles.countbase}>{flagnumber}</div>
           <button onClick={() => reset()}>
@@ -369,7 +369,7 @@ const Home = () => {
         </div>
         <div
           className={styles.bombMap}
-          style={{ width: 32 * save[1] + 12, height: 32 * save[0] + 12 }}
+          style={{ width: 32 * width + 12, height: 32 * height + 12 }}
         >
           {bombMap.map((row, y) => (
             <div key={y} className={styles.row}>
