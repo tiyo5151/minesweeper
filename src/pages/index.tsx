@@ -19,6 +19,8 @@ const Home = () => {
 
   const [numbomb, setnumbomb] = useState(10);
 
+  const [save, setsave] = useState([9, 9, 10]);
+
   const [a, setA] = useState(0);
 
   const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
@@ -176,8 +178,8 @@ const Home = () => {
     setface(0);
     setClickedBomb(null);
 
-    const newUserInputs = Array.from({ length: height }, () => Array(width).fill(-1));
-    const newBombMap = Array.from({ length: height }, () => Array(width).fill(0));
+    const newUserInputs = Array.from({ length: save[0] }, () => Array(save[1]).fill(-1));
+    const newBombMap = Array.from({ length: save[0] }, () => Array(save[1]).fill(0));
 
     setuserInputs(newUserInputs);
     setbombMap(newBombMap);
@@ -271,25 +273,56 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.buttonContainer}>
-        <button className={styles.button} onClick={() => changeboard(9, 9, 10)}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <button
+          className={styles.button}
+          onClick={() => {
+            changeboard(9, 9, 10);
+            setsave([9, 9, 10]);
+          }}
+        >
           <b>初級</b>
         </button>
-        <button className={styles.button} onClick={() => changeboard(16, 16, 40)}>
+        <button
+          className={styles.button}
+          onClick={() => {
+            changeboard(16, 16, 40);
+            setsave([16, 16, 40]);
+          }}
+        >
           <b>中級</b>
         </button>
-        <button className={styles.button} onClick={() => changeboard(16, 30, 99)}>
+        <button
+          className={styles.button}
+          onClick={() => {
+            changeboard(16, 30, 99);
+            setsave([16, 30, 99]);
+          }}
+        >
           <b>上級</b>
         </button>
-        <button className={styles.button} onClick={() => changeboard(rate1, rate2, rate3)}>
+        <button
+          className={styles.button}
+          onClick={() => {
+            changeboard(rate1, rate2, rate3);
+            setsave([rate1, rate2, rate3]);
+          }}
+        >
           <b>カスタム(更新)</b>
         </button>
       </div>
-      <div className={styles.customContainer}>
-        <p style={{ color: 'white' }}>縦</p>
-        <p style={{ color: 'white' }}>横</p>
-        <p style={{ color: 'white' }}>爆弾</p>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+        <div style={{ marginRight: '50px', color: 'white' }}>
+          <p>縦</p>
+        </div>
+        <div style={{ marginRight: '50px', color: 'white' }}>
+          <p>横</p>
+        </div>
+        <div style={{ color: 'white' }}>
+          <p>爆弾</p>
+        </div>
       </div>
+
       <div className={styles.customContainer2}>
         <input
           type="number"
@@ -316,79 +349,68 @@ const Home = () => {
           onChange={(event) => setnumbomb(event.target.valueAsNumber)}
         />
       </div>
-
-      <div className={styles.mostoverline}>
-        <div className={styles.middiumline}>
-          <div className={styles.lastline}>
-            <div className={styles.worldboard}>
-              <div className={styles.overbombMap1}>
-                <div className={width > 3 ? styles.threebase : undefined}>
-                  <div className={width > 3 ? styles.countbase : undefined}>
-                    {width > 3 ? flagnumber : undefined}
-                  </div>
+      <div
+        className={styles.board}
+        // style={{ width: 40 * width + 40 + 12, height: 40 * height + 120 + 12 }}
+        style={{
+          width: save[1] > 8 ? `${40 * save[1] + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
+          height: 40 * save[0] + 120 + 12,
+        }}
+      >
+        <div
+          className={styles.imformationboard}
+          style={{ width: save[1] > 8 ? `${40 * save[1]}px` : `${40 * 9}px` }}
+        >
+          <div className={styles.countbase}>{flagnumber}</div>
+          <button onClick={() => reset()}>
+            <div
+              className={styles.sampleStyle}
+              style={{
+                backgroundPosition: `${-30 * (11 + face)}px 0px`,
+              }}
+            />
+          </button>
+          <div className={styles.countbase}>{time}</div>
+        </div>
+        <div
+          className={styles.bombMap}
+          style={{ width: 32 * save[1] + 12, height: 32 * save[0] + 12 }}
+        >
+          {bombMap.map((row, y) => (
+            <div key={y} className={styles.row}>
+              {row.map((cell, x) => (
+                <div
+                  key={x}
+                  className={styles.cell}
+                  onClick={() => clickHandler(x, y)}
+                  onContextMenu={(event) => Rclick(x, y, event)}
+                >
+                  <div
+                    className={
+                      clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                        ? styles.redbomb
+                        : userInputs[y][x] === -1
+                          ? styles.rock
+                          : userInputs[y][x] === 0
+                            ? styles.sampleStyle
+                            : styles.fusion
+                    }
+                    style={
+                      clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                        ? { backgroundPosition: `${-30 * 10}px 0px ` }
+                        : userInputs[y][x] === -1
+                          ? undefined
+                          : userInputs[y][x] === 0
+                            ? {
+                                backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px`,
+                              }
+                            : { backgroundPosition: `${-30 * 7.2}px 0px` }
+                    }
+                  />
                 </div>
-                <div className={width > 8 ? styles.threebase : undefined}>
-                  {width > 8 && (
-                    <div className={styles.aroundbutton}>
-                      <button onClick={() => reset()}>
-                        <div className={styles.button2}>
-                          <div
-                            className={styles.sampleStyle}
-                            style={{
-                              backgroundPosition: `${-30 * (11 + face)}px 0px`,
-                            }}
-                          />
-                        </div>
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className={width > 5 ? styles.threebase : undefined}>
-                  <div className={width > 5 ? styles.countbase : undefined}>
-                    {width > 5 ? time : undefined}
-                  </div>
-                </div>
-              </div>
-              <div className={styles.line1} />
-              <div className={styles.line2} />
-              <div className={styles.line3} />
-              <div className={styles.bombMap}>
-                {bombMap.map((row, y) => (
-                  <div key={y} className={styles.row}>
-                    {row.map((cell, x) => (
-                      <div
-                        key={x}
-                        className={styles.cell}
-                        onClick={() => clickHandler(x, y)}
-                        onContextMenu={(event) => Rclick(x, y, event)}
-                      >
-                        <div
-                          className={
-                            clickedBomb && clickedBomb.x === x && clickedBomb.y === y
-                              ? styles.redbomb
-                              : userInputs[y][x] === -1
-                                ? styles.rock
-                                : userInputs[y][x] === 0
-                                  ? styles.sampleStyle
-                                  : styles.fusion
-                          }
-                          style={
-                            clickedBomb && clickedBomb.x === x && clickedBomb.y === y
-                              ? { backgroundPosition: `${-30 * 10}px 0px ` }
-                              : userInputs[y][x] === -1
-                                ? undefined
-                                : userInputs[y][x] === 0
-                                  ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
-                                  : { backgroundPosition: `${-30 * 9}px 0px` }
-                          }
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

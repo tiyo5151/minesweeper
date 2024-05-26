@@ -9,6 +9,26 @@
   background-color: #181a1b;
 }
 
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #c6c6c6;
+  border: 8px solid;
+  border-color: #e5e5e5 #737373 #737373 #e5e5e5;
+}
+
+.imformationboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  background-color: #adadad;
+  border: 5px solid;
+  border-color: #737373 #e5e5e5 #e5e5e4 #737373;
+}
+
 .sampleStyle {
   width: 30px;
   height: 30px;
@@ -18,14 +38,11 @@
 .bombMap {
   display: flex;
   flex-direction: column;
-  background-color: #c6c6c6;
-}
-
-.overbombMap1 {
-  display: flex;
   align-items: center;
   justify-content: center;
   background-color: #c6c6c6;
+  border: 5px solid;
+  border-color: #737373 #e5e5e5 #e5e5e4 #737373;
 }
 
 .row {
@@ -36,43 +53,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border: 1px solid #808080;
 }
-
-/* bombMap:cell = 9:1 best */
 
 .rock {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background-color: #c6c6c6;
-  border: 5px solid;
+  border: 4px solid;
   border-color: #fff #808080 #808080 #fff;
-}
-
-.threebase {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 80px;
-  background-color: #c6c6c6;
 }
 
 .countbase {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 50px;
-  font-size: 2rem;
+  width: 64px;
+  height: 40px;
+  margin: 24px;
+  font-size: 1.5rem;
   color: red;
   background-color: #000;
-  border: 4px solid;
+  border: 3px solid;
   border-color: #737373 #e5e5e5 #e5e5e4 #737373;
 }
 
@@ -80,11 +87,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: url('~/src/assets/images/minesweeper.icons.png') no-repeat;
   background-color: #c6c6c6;
-  border: 5px solid;
+  background-size: cover;
+  border: 4px solid;
   border-color: #fff #808080 #808080 #fff;
 }
 
@@ -92,98 +100,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: url('~/src/assets/images/minesweeper.icons.png') no-repeat;
   background-color: #f22;
-  border: 5px solid #f22;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 55px;
-  height: 35px;
-  font-size: 9px;
-}
-
-.button2 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #b2b2b2;
-  border: 8px solid;
-  border-color: #e5e5e5 #737373 #737373 #e5e5e5;
-}
-
-.buttonContainer {
-  display: flex;
-  gap: 5px;
-}
-
-.customContainer {
-  display: flex;
-  gap: 75px;
-  height: 40px;
-  background-color: #181a1b;
-}
-
-.customContainer2 {
-  display: flex;
-  gap: 30px;
-  background-color: #181a1b;
-}
-
-.mostoverline {
-  display: flex;
-  flex-direction: column;
-  width: auto;
-  border: 10px solid;
-  border-color: #e5e5e5 #737373 #737373 #e5e5e5;
-}
-
-.middiumline {
-  display: flex;
-  flex-direction: column;
-  width: auto;
-  border: 20px solid;
-  border-color: #b2b2b2;
-}
-
-.lastline {
-  display: flex;
-  flex-direction: column;
-  width: auto;
-  border: 10px solid;
-  border-color: #737373 #e5e5e5 #e5e5e5 #737373;
-}
-
-.line1 {
-  border: 5px solid;
-  border-color: #e5e5e5;
-}
-
-.line2 {
-  border: 10px solid;
-  border-color: #b2b2b2;
-}
-
-.line3 {
-  border: 5px solid;
-  border-color: #737373;
-}
-
-.aroundbutton {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid;
-  border-color: #737373;
-}
-
-.worldboard {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: auto;
 }
