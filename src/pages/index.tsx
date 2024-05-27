@@ -21,7 +21,7 @@ const Home = () => {
 
   const [save, setsave] = useState([9, 9, 10]);
 
-  const [a, setA] = useState(0);
+  // const [a, setA] = useState(0);
 
   const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
   // -3:rock+question
@@ -29,7 +29,7 @@ const Home = () => {
   // -1:rock
   // 0:none
 
-  const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
+  const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
   // 0:none
   // 1~8:number
   // 11:bomb
@@ -62,7 +62,7 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [start, time]);
 
-  console.log(time);
+  // console.log(time);
 
   const rate1 = save[0];
   const rate2 = save[1];
@@ -73,7 +73,7 @@ const Home = () => {
     setface(0);
     setstart(false);
     settime(0);
-    setA(0);
+    // setA(0);
     setbombMap(Array.from({ length: height }, () => Array(width).fill(0)));
     setuserInputs(Array.from({ length: height }, () => Array(width).fill(-1)));
     setheight(height);
@@ -84,7 +84,6 @@ const Home = () => {
   const spread = (x: number, y: number, bombMap: number[][], useInputs: number[][]) => {
     const newbombMap = structuredClone(bombMap);
     const newuserInputs = structuredClone(useInputs);
-    console.log(newbombMap);
     console.log('spread 関数が呼び出されました。入力:', x, y);
 
     if (newbombMap[y][x] === 0) {
@@ -172,7 +171,7 @@ const Home = () => {
   };
 
   const reset = () => {
-    setA(0);
+    // setA(0);
     settime(0);
     setstart(false);
     setface(0);
@@ -222,7 +221,7 @@ const Home = () => {
     if (newuserInputs[y][x] === -2 || face === 1 || face === 2) {
       return;
     }
-    if (a === 0) {
+    if (start === false) {
       const cells = [];
 
       for (let x = 0; x < width; x++) {
@@ -262,13 +261,16 @@ const Home = () => {
       setstart(true);
       setbombMap(newbombMap);
     }
+    console.log('いきしてるか？？？？？？？？');
     const newNewSampleBoard = spread(x, y, newbombMap, newuserInputs);
     newNewSampleBoard[y][x] = 0;
     setuserInputs(newNewSampleBoard);
-    setA(1); // aの更新
+    // setA(1); // aの更新
     // console.log(`a:${a}`);
+    console.log(newNewSampleBoard);
     console.log(newbombMap);
     clear(newNewSampleBoard, newbombMap);
+    // facecheacker(x, y);
   };
 
   return (
