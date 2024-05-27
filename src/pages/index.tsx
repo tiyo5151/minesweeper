@@ -1,5 +1,5 @@
 import styles from './index.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const directions = [
   [1, 0],
@@ -14,139 +14,83 @@ const directions = [
 
 const Home = () => {
   const [height, setheight] = useState(9);
-
   const [width, setwidth] = useState(9);
-
   const [numbomb, setnumbomb] = useState(10);
-
   const [save, setsave] = useState([9, 9, 10]);
-
-  // const [a, setA] = useState(0);
-
   const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
-  // -3:rock+question
-  // -2:rock+flag
-  // -1:rock
-  // 0:none
-
   const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
-  // 0:none
-  // 1~8:number
-  // 11:bomb
-
   const [time, settime] = useState(0);
-
   const [start, setstart] = useState(false);
-
-  const Result: number[][] = [];
-
-  // console.log(userInputs);
-
   const [face, setface] = useState(0);
-
   const [clickedBomb, setClickedBomb] = useState<{ x: number; y: number } | null>(null);
+  const [Result, setResult] = useState<number[][]>([]);
 
-  // console.log(face);
+  console.log(Result);
 
   useEffect(() => {
     let interval: number | undefined;
-
     if (start) {
       interval = window.setInterval(() => {
-        settime(time + 1);
+        settime((time) => time + 1);
       }, 1000);
     } else if (!start && time !== 0) {
       clearInterval(interval);
     }
-
     return () => clearInterval(interval);
   }, [start, time]);
-
-  // console.log(time);
-
-  const rate1 = save[0];
-  const rate2 = save[1];
-  const rate3 = save[2];
 
   const changeboard = (height: number, width: number, numbomb: number) => {
     setClickedBomb(null);
     setface(0);
     setstart(false);
     settime(0);
-    // setA(0);
     setbombMap(Array.from({ length: height }, () => Array(width).fill(0)));
     setuserInputs(Array.from({ length: height }, () => Array(width).fill(-1)));
     setheight(height);
     setwidth(width);
     setnumbomb(numbomb);
+    setResult([]);
   };
 
-  const spread = (x: number, y: number, bombMap: number[][], useInputs: number[][]) => {
-    const newbombMap = structuredClone(bombMap);
-    const newuserInputs = structuredClone(useInputs);
-    console.log('spread 関数が呼び出されました。入力:', x, y);
+  const spread = useCallback(
+    (x: number, y: number, bombMap: number[][], userInputs: number[][]) => {
+      const newbombMap = structuredClone(bombMap);
+      const newuserInputs = structuredClone(userInputs);
 
-    if (newbombMap[y][x] === 0) {
-      console.log('反応！');
-
-      if (x >= 0 && x < width && y >= 0 && y < height) {
+      const recursiveSpread = (x: number, y: number) => {
         if (newbombMap[y][x] === 0) {
-          spreadtospread(x, y, bombMap, userInputs);
+          newuserInputs[y][x] = 0;
+          for (const [dx, dy] of directions) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height && newuserInputs[ny][nx] === -1) {
+              recursiveSpread(nx, ny);
+            }
+          }
+        } else if (newbombMap[y][x] !== 11) {
           newuserInputs[y][x] = 0;
         }
-      } else if (newbombMap[y][x] !== 11) {
-        newuserInputs[y][x] = 0;
-      }
-    }
-    for (let i = 0; i < Result.length; i++) {
-      const [by, bx] = Result[i];
-      newuserInputs[by][bx] = 0;
-      for (const [dx, dy] of directions) {
-        const cx = bx + dx;
-        const cy = by + dy;
-        if (cx >= 0 && cx < width && cy >= 0 && cy < height) {
-          newuserInputs[cy][cx] = 0;
-        }
-      }
-    }
-    if (newbombMap[y][x] === 11) {
-      setface(2);
-      for (let i = 0; i < height; i++) {
-        for (let j = 0; j < width; j++) {
-          if (newbombMap[i][j] === 11) {
-            newuserInputs[i][j] = 0;
+      };
+
+      recursiveSpread(x, y);
+
+      if (newbombMap[y][x] === 11) {
+        setface(2);
+        for (let i = 0; i < height; i++) {
+          for (let j = 0; j < width; j++) {
+            if (newbombMap[i][j] === 11) {
+              newuserInputs[i][j] = 0;
+            }
           }
         }
+        setClickedBomb({ x, y });
+        setstart(false);
       }
-      setClickedBomb({ x, y });
-      setstart(false);
-    }
-    // setuserInputs(newuserInputs)
-    return newuserInputs;
-    // console.log(newuserInputs);
-  };
 
-  const spreadtospread = (x: number, y: number, bombMap: number[][], useInputs: number[][]) => {
-    const newbombMap = structuredClone(bombMap);
-    const newuserInputs = structuredClone(useInputs);
-    const temporaryResult = [];
-    for (const [dx, dy] of directions) {
-      const rx = x + dx;
-      const ry = y + dy;
-      console.log('rx,ry:', rx, ry);
-      if (rx >= 0 && rx < width && ry >= 0 && ry < height) {
-        if (newbombMap[ry][rx] === 0 && !Result.some(([i, j]) => i === ry && j === rx)) {
-          temporaryResult.push([rx, ry]);
-          // console.log(temporaryResult);
-          Result.push([ry, rx]);
-          spread(rx, ry, newbombMap, newuserInputs);
-        }
-      } else {
-        continue;
-      }
-    }
-    console.log(Result);
-  };
+      return newuserInputs;
+    },
+    [width, height],
+  );
 
   const clear = (userInputs: number[][], bombMap: number[][]) => {
     let count2 = 0;
@@ -171,23 +115,20 @@ const Home = () => {
   };
 
   const reset = () => {
-    // setA(0);
     settime(0);
     setstart(false);
     setface(0);
     setClickedBomb(null);
-
     const newUserInputs = Array.from({ length: height }, () => Array(width).fill(-1));
     const newBombMap = Array.from({ length: height }, () => Array(width).fill(0));
-
     setuserInputs(newUserInputs);
     setbombMap(newBombMap);
-
+    setResult([]);
     console.log(`userInputs:`, newUserInputs);
     console.log(`bombMap:`, newBombMap);
   };
+
   const Rclick = (x: number, y: number, event: React.MouseEvent<HTMLDivElement>) => {
-    // const newbombmap = structuredClone(bombMap)
     const newuserInputs = structuredClone(userInputs);
     event.preventDefault();
     if (face === 1 || face === 2) {
@@ -206,7 +147,7 @@ const Home = () => {
   const countflag = () => {
     let count = 0;
     for (const row of userInputs) {
-      count += row.filter((userInputs) => userInputs === -2).length;
+      count += row.filter((cell) => cell === -2).length;
     }
     return count;
   };
@@ -221,56 +162,45 @@ const Home = () => {
     if (newuserInputs[y][x] === -2 || face === 1 || face === 2) {
       return;
     }
-    if (start === false) {
+    if (!start) {
       const cells = [];
-
-      for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
-          cells.push([x, y]);
+      for (let cx = 0; cx < width; cx++) {
+        for (let cy = 0; cy < height; cy++) {
+          cells.push([cx, cy]);
         }
       }
-
-      // console.log(cells);
-
       for (let i = cells.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [cells[i], cells[j]] = [cells[j], cells[i]];
       }
-      // console.log(cells);
-
       const filteredCells = cells.filter(([cx, cy]) => !(cx === x && cy === y));
-      // console.log(filteredCells);
       for (let i = 0; i < numbomb; i++) {
         const [dx, dy] = filteredCells[i];
         newbombMap[dy][dx] = 11;
       }
-      for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++)
-          if (newbombMap[y][x] !== 11) {
-            let NumBer = 0;
+      for (let cx = 0; cx < width; cx++) {
+        for (let cy = 0; cy < height; cy++) {
+          if (newbombMap[cy][cx] !== 11) {
+            let number = 0;
             for (const [dx, dy] of directions) {
-              const nx = x + dx;
-              const ny = y + dy;
+              const nx = cx + dx;
+              const ny = cy + dy;
               if (nx >= 0 && nx < width && ny >= 0 && ny < height && newbombMap[ny][nx] === 11) {
-                NumBer++;
+                number++;
               }
             }
-            newbombMap[y][x] = NumBer;
+            newbombMap[cy][cx] = number;
           }
+        }
       }
       setstart(true);
       setbombMap(newbombMap);
     }
-    console.log('いきしてるか？？？？？？？？');
+
     const newNewSampleBoard = spread(x, y, newbombMap, newuserInputs);
     newNewSampleBoard[y][x] = 0;
     setuserInputs(newNewSampleBoard);
-    // setA(1); // aの更新
-    // console.log(`a:${a}`);
-    console.log(newNewSampleBoard);
-    console.log(newbombMap);
     clear(newNewSampleBoard, newbombMap);
-    // facecheacker(x, y);
   };
 
   return (
@@ -302,8 +232,7 @@ const Home = () => {
         </button>
         <button
           onClick={() => {
-            changeboard(rate1, rate2, rate3);
-            setsave([rate1, rate2, rate3]);
+            changeboard(save[0], save[1], save[2]);
           }}
         >
           <b>カスタム(更新)</b>
@@ -348,7 +277,6 @@ const Home = () => {
       </div>
       <div
         className={styles.board}
-        // style={{ width: 40 * width + 40 + 12, height: 40 * height + 120 + 12 }}
         style={{
           width: width > 8 ? `${40 * width + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
           height: 40 * height + 120 + 12,
@@ -362,9 +290,7 @@ const Home = () => {
           <button onClick={() => reset()}>
             <div
               className={styles.sampleStyle}
-              style={{
-                backgroundPosition: `${-30 * (11 + face)}px 0px`,
-              }}
+              style={{ backgroundPosition: `${-30 * (11 + face)}px 0px` }}
             />
           </button>
           <div className={styles.countbase}>{time}</div>
@@ -398,9 +324,7 @@ const Home = () => {
                         : userInputs[y][x] === -1
                           ? undefined
                           : userInputs[y][x] === 0
-                            ? {
-                                backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px`,
-                              }
+                            ? { backgroundPosition: `${-30 * (bombMap[y][x] - 1)}px 0px` }
                             : { backgroundPosition: `${-30 * 7.2}px 0px` }
                     }
                   />
