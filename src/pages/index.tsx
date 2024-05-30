@@ -1,5 +1,5 @@
 import styles from './index.module.css';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 const directions = [
   [1, 0],
@@ -14,8 +14,6 @@ const directions = [
 
 const Home = () => {
   const [element, setelement] = useState({ height: 9, width: 9, numbomb: 10 });
-  // const [width, setwidth] = useState(9);
-  // const [numbomb, setnumbomb] = useState(10);
   const [save, setsave] = useState([9, 9, 10]);
   const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
   const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
@@ -23,9 +21,7 @@ const Home = () => {
   const [start, setstart] = useState(false);
   const [face, setface] = useState(0);
   const [clickedBomb, setClickedBomb] = useState<{ x: number; y: number } | null>(null);
-  const [Result, setResult] = useState<number[][]>([]);
-
-  console.log(Result);
+  // const [Result, setResult] = useState<number[][]>([]);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -47,57 +43,50 @@ const Home = () => {
     setbombMap(Array.from({ length: height }, () => Array(width).fill(0)));
     setuserInputs(Array.from({ length: height }, () => Array(width).fill(-1)));
     setelement({ height, width, numbomb });
-    // setheight(height);
-    // setwidth(width);
-    // setnumbomb(numbomb);
-    setResult([]);
+    // setResult([]);
   };
 
-  const spread = useCallback(
-    (x: number, y: number, bombMap: number[][], userInputs: number[][]) => {
-      const newbombMap = structuredClone(bombMap);
-      const newuserInputs = structuredClone(userInputs);
+  const spread = (x: number, y: number, bombMap: number[][], userInputs: number[][]) => {
+    const newbombMap = structuredClone(bombMap);
+    const newuserInputs = structuredClone(userInputs);
 
-      const recursiveSpread = (x: number, y: number) => {
-        if (newbombMap[y][x] === 0) {
-          newuserInputs[y][x] = 0;
-          for (const [dx, dy] of directions) {
-            const nx = x + dx;
-            const ny = y + dy;
-            if (
-              nx >= 0 &&
-              nx < element.width &&
-              ny >= 0 &&
-              ny < element.height &&
-              newuserInputs[ny][nx] === -1
-            ) {
-              recursiveSpread(nx, ny);
-            }
-          }
-        } else if (newbombMap[y][x] !== 11) {
-          newuserInputs[y][x] = 0;
-        }
-      };
-
-      recursiveSpread(x, y);
-
-      if (newbombMap[y][x] === 11) {
-        setface(2);
-        for (let i = 0; i < element.height; i++) {
-          for (let j = 0; j < element.width; j++) {
-            if (newbombMap[i][j] === 11) {
-              newuserInputs[i][j] = 0;
-            }
+    const recursiveSpread = (x: number, y: number) => {
+      if (newbombMap[y][x] === 0) {
+        newuserInputs[y][x] = 0;
+        for (const [dx, dy] of directions) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (
+            nx >= 0 &&
+            nx < element.width &&
+            ny >= 0 &&
+            ny < element.height &&
+            newuserInputs[ny][nx] === -1
+          ) {
+            recursiveSpread(nx, ny);
           }
         }
-        setClickedBomb({ x, y });
-        setstart(false);
+      } else if (newbombMap[y][x] !== 11) {
+        newuserInputs[y][x] = 0;
       }
+    };
 
-      return newuserInputs;
-    },
-    [element.width, element.height],
-  );
+    recursiveSpread(x, y);
+
+    if (newbombMap[y][x] === 11) {
+      setface(2);
+      for (let i = 0; i < element.height; i++) {
+        for (let j = 0; j < element.width; j++) {
+          if (newbombMap[i][j] === 11) {
+            newuserInputs[i][j] = 0;
+          }
+        }
+      }
+      setClickedBomb({ x, y });
+      setstart(false);
+    }
+    return newuserInputs;
+  };
 
   const clear = (userInputs: number[][], bombMap: number[][]) => {
     let count2 = 0;
@@ -132,7 +121,7 @@ const Home = () => {
     const newBombMap = Array.from({ length: element.height }, () => Array(element.width).fill(0));
     setuserInputs(newUserInputs);
     setbombMap(newBombMap);
-    setResult([]);
+    // setResult([]);
     console.log(`userInputs:`, newUserInputs);
     console.log(`bombMap:`, newBombMap);
   };
