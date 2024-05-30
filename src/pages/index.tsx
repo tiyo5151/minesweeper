@@ -13,9 +13,9 @@ const directions = [
 ];
 
 const Home = () => {
-  const [height, setheight] = useState(9);
-  const [width, setwidth] = useState(9);
-  const [numbomb, setnumbomb] = useState(10);
+  const [element, setelement] = useState({ height: 9, width: 9, numbomb: 10 });
+  // const [width, setwidth] = useState(9);
+  // const [numbomb, setnumbomb] = useState(10);
   const [save, setsave] = useState([9, 9, 10]);
   const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
   const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
@@ -46,9 +46,10 @@ const Home = () => {
     settime(0);
     setbombMap(Array.from({ length: height }, () => Array(width).fill(0)));
     setuserInputs(Array.from({ length: height }, () => Array(width).fill(-1)));
-    setheight(height);
-    setwidth(width);
-    setnumbomb(numbomb);
+    setelement({ height, width, numbomb });
+    // setheight(height);
+    // setwidth(width);
+    // setnumbomb(numbomb);
     setResult([]);
   };
 
@@ -63,7 +64,13 @@ const Home = () => {
           for (const [dx, dy] of directions) {
             const nx = x + dx;
             const ny = y + dy;
-            if (nx >= 0 && nx < width && ny >= 0 && ny < height && newuserInputs[ny][nx] === -1) {
+            if (
+              nx >= 0 &&
+              nx < element.width &&
+              ny >= 0 &&
+              ny < element.height &&
+              newuserInputs[ny][nx] === -1
+            ) {
               recursiveSpread(nx, ny);
             }
           }
@@ -76,8 +83,8 @@ const Home = () => {
 
       if (newbombMap[y][x] === 11) {
         setface(2);
-        for (let i = 0; i < height; i++) {
-          for (let j = 0; j < width; j++) {
+        for (let i = 0; i < element.height; i++) {
+          for (let j = 0; j < element.width; j++) {
             if (newbombMap[i][j] === 11) {
               newuserInputs[i][j] = 0;
             }
@@ -89,21 +96,21 @@ const Home = () => {
 
       return newuserInputs;
     },
-    [width, height],
+    [element.width, element.height],
   );
 
   const clear = (userInputs: number[][], bombMap: number[][]) => {
     let count2 = 0;
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
+    for (let x = 0; x < element.width; x++) {
+      for (let y = 0; y < element.height; y++) {
         userInputs[y][x] === 0 && bombMap[y][x] !== 11 ? count2++ : undefined;
       }
     }
-    if (count2 === height * width - numbomb) {
+    if (count2 === element.height * element.width - element.numbomb) {
       setface(1);
       setstart(false);
-      for (let i = 0; i < height; i++) {
-        for (let j = 0; j < width; j++) {
+      for (let i = 0; i < element.height; i++) {
+        for (let j = 0; j < element.width; j++) {
           if (bombMap[i][j] === 11) {
             userInputs[i][j] = -2;
           }
@@ -119,8 +126,10 @@ const Home = () => {
     setstart(false);
     setface(0);
     setClickedBomb(null);
-    const newUserInputs = Array.from({ length: height }, () => Array(width).fill(-1));
-    const newBombMap = Array.from({ length: height }, () => Array(width).fill(0));
+    const newUserInputs = Array.from({ length: element.height }, () =>
+      Array(element.width).fill(-1),
+    );
+    const newBombMap = Array.from({ length: element.height }, () => Array(element.width).fill(0));
     setuserInputs(newUserInputs);
     setbombMap(newBombMap);
     setResult([]);
@@ -134,7 +143,7 @@ const Home = () => {
     if (face === 1 || face === 2) {
       return;
     }
-    if (x >= 0 && x < width && y >= 0 && y < height) {
+    if (x >= 0 && x < element.width && y >= 0 && y < element.height) {
       if (newuserInputs[y][x] === -1) {
         newuserInputs[y][x] = -2;
       } else if (newuserInputs[y][x] === -2) {
@@ -152,7 +161,7 @@ const Home = () => {
     return count;
   };
 
-  const flagnumber = numbomb - countflag();
+  const flagnumber = element.numbomb - countflag();
 
   const clickHandler = (x: number, y: number) => {
     console.log(x, y);
@@ -164,8 +173,8 @@ const Home = () => {
     }
     if (!start) {
       const cells = [];
-      for (let cx = 0; cx < width; cx++) {
-        for (let cy = 0; cy < height; cy++) {
+      for (let cx = 0; cx < element.width; cx++) {
+        for (let cy = 0; cy < element.height; cy++) {
           cells.push([cx, cy]);
         }
       }
@@ -174,18 +183,24 @@ const Home = () => {
         [cells[i], cells[j]] = [cells[j], cells[i]];
       }
       const filteredCells = cells.filter(([cx, cy]) => !(cx === x && cy === y));
-      for (let i = 0; i < numbomb; i++) {
+      for (let i = 0; i < element.numbomb; i++) {
         const [dx, dy] = filteredCells[i];
         newbombMap[dy][dx] = 11;
       }
-      for (let cx = 0; cx < width; cx++) {
-        for (let cy = 0; cy < height; cy++) {
+      for (let cx = 0; cx < element.width; cx++) {
+        for (let cy = 0; cy < element.height; cy++) {
           if (newbombMap[cy][cx] !== 11) {
             let number = 0;
             for (const [dx, dy] of directions) {
               const nx = cx + dx;
               const ny = cy + dy;
-              if (nx >= 0 && nx < width && ny >= 0 && ny < height && newbombMap[ny][nx] === 11) {
+              if (
+                nx >= 0 &&
+                nx < element.width &&
+                ny >= 0 &&
+                ny < element.height &&
+                newbombMap[ny][nx] === 11
+              ) {
                 number++;
               }
             }
@@ -278,13 +293,13 @@ const Home = () => {
       <div
         className={styles.board}
         style={{
-          width: width > 8 ? `${40 * width + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
-          height: 40 * height + 120 + 12,
+          width: element.width > 8 ? `${40 * element.width + 40 + 12}px` : `${40 * 9 + 40 + 12}px`,
+          height: 40 * element.height + 120 + 12,
         }}
       >
         <div
           className={styles.imformationboard}
-          style={{ width: width > 8 ? `${40 * width}px` : `${40 * 9}px` }}
+          style={{ width: element.width > 8 ? `${40 * element.width}px` : `${40 * 9}px` }}
         >
           <div className={styles.countbase}>{flagnumber}</div>
           <button onClick={() => reset()}>
@@ -297,7 +312,7 @@ const Home = () => {
         </div>
         <div
           className={styles.bombMap}
-          style={{ width: 32 * width + 12, height: 32 * height + 12 }}
+          style={{ width: 32 * element.width + 12, height: 32 * element.height + 12 }}
         >
           {bombMap.map((row, y) => (
             <div key={y} className={styles.row}>
