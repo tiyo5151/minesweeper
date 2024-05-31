@@ -1,5 +1,3 @@
-import styles from '../pages/index.module.css';
-
 const TopArea = ({ changeboard, setsave, save, element, flagnumber, reset, face, time }) => {
   return (
     <>

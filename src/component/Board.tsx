@@ -1,6 +1,15 @@
-import styles from './index.module.css';
-
-const Board = () => {
+import styles from '../pages/index.module.css';
+const Board = ({
+  element,
+  flagnumber,
+  reset,
+  face,
+  time,
+  bombMap,
+  clickHandler,
+  Rclick,
+  userInputs,
+}) => {
   return (
     <div
       className={styles.board}
@@ -63,3 +72,5 @@ const Board = () => {
     </div>
   );
 };
+
+export default Board;
