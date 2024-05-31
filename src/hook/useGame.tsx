@@ -80,7 +80,7 @@ const useGame = () => {
             nx < element.width &&
             ny >= 0 &&
             ny < element.height &&
-            newuserInputs[ny][nx] === -1
+            newuserInputs[ny][nx] !== 0
           ) {
             recursiveSpread(nx, ny);
           }
