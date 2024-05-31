@@ -13,7 +13,7 @@ const directions = [
 
 const useGame = () => {
   const [element, setelement] = useState({ height: 9, width: 9, numbomb: 10 });
-  const [save, setsave] = useState([9, 9, 10]);
+  const [save, setsave] = useState({ height: 9, width: 9, numbomb: 10 });
   const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
   const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
   const [time, settime] = useState(0);

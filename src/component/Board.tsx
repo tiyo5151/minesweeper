@@ -1,5 +1,22 @@
 import styles from '../pages/index.module.css';
-const Board = ({
+
+interface Element {
+  width: number;
+  height: number;
+}
+interface Props {
+  element: Element;
+  flagnumber: number;
+  reset: () => void;
+  face: number;
+  time: number;
+  bombMap: number[][];
+  clickHandler: (x: number, y: number) => void;
+  Rclick: (x: number, y: number, event: React.MouseEvent<HTMLDivElement>) => void;
+  userInputs: number[][];
+}
+
+const Board: React.FC<Props> = ({
   element,
   flagnumber,
   reset,
@@ -35,9 +52,9 @@ const Board = ({
         className={styles.bombMap}
         style={{ width: 32 * element.width + 12, height: 32 * element.height + 12 }}
       >
-        {bombMap.map((row, y) => (
+        {bombMap.map((row: number[], y: number) => (
           <div key={y} className={styles.row}>
-            {row.map((cell, x) => (
+            {row.map((cell: number, x: number) => (
               <div
                 key={x}
                 className={styles.cell}

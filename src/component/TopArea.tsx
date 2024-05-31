@@ -1,11 +1,22 @@
-const TopArea = ({ changeboard, setsave, save, element, flagnumber, reset, face, time }) => {
+interface Save {
+  width: number;
+  height: number;
+  numbomb: number;
+}
+interface Props {
+  changeboard: (width: number, height: number, bombs: number) => void;
+  save: Save;
+  setsave: (save: Save) => void;
+}
+
+const TopArea: React.FC<Props> = ({ changeboard, setsave, save }) => {
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <button
           onClick={() => {
             changeboard(9, 9, 10);
-            setsave([9, 9, 10]);
+            setsave({ width: 9, height: 9, numbomb: 10 });
           }}
         >
           <b>初級</b>
@@ -13,7 +24,7 @@ const TopArea = ({ changeboard, setsave, save, element, flagnumber, reset, face,
         <button
           onClick={() => {
             changeboard(16, 16, 40);
-            setsave([16, 16, 40]);
+            setsave({ width: 16, height: 16, numbomb: 40 });
           }}
         >
           <b>中級</b>
@@ -21,14 +32,14 @@ const TopArea = ({ changeboard, setsave, save, element, flagnumber, reset, face,
         <button
           onClick={() => {
             changeboard(16, 30, 99);
-            setsave([16, 30, 99]);
+            setsave({ width: 16, height: 30, numbomb: 99 });
           }}
         >
           <b>上級</b>
         </button>
         <button
           onClick={() => {
-            changeboard(save[0], save[1], save[2]);
+            changeboard(save.height, save.width, save.numbomb);
           }}
         >
           <b>カスタム(更新)</b>
@@ -51,24 +62,38 @@ const TopArea = ({ changeboard, setsave, save, element, flagnumber, reset, face,
           required
           min="1"
           max="100"
-          value={save[0]}
-          onChange={(event) => setsave([event.target.valueAsNumber, save[1], save[2]])}
+          value={save.height}
+          onChange={(event) =>
+            setsave({
+              height: event.target.valueAsNumber,
+              width: save.width,
+              numbomb: save.numbomb,
+            })
+          }
         />
         <input
           type="number"
           required
           min="1"
           max="100"
-          value={save[1]}
-          onChange={(event) => setsave([save[0], event.target.valueAsNumber, save[2]])}
+          value={save.width}
+          onChange={(event) =>
+            setsave({
+              height: save.height,
+              width: event.target.valueAsNumber,
+              numbomb: save.numbomb,
+            })
+          }
         />
         <input
           type="number"
           required
           min="1"
           max="99"
-          value={save[2]}
-          onChange={(event) => setsave([save[0], save[1], event.target.valueAsNumber])}
+          value={save.numbomb}
+          onChange={(event) =>
+            setsave({ height: save.height, width: save.width, numbomb: event.target.valueAsNumber })
+          }
         />
       </div>
     </>
