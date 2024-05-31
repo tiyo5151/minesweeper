@@ -18,14 +18,12 @@ const Home = () => {
   const [userInputs, setuserInputs] = useState(Array.from({ length: 9 }, () => Array(9).fill(-1)));
   const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
   const [time, settime] = useState(0);
-  const [start, setstart] = useState(false);
+  const [start, setstart] = useState(0);
   const [face, setface] = useState(0);
-  const [clickedBomb, setClickedBomb] = useState<{ x: number; y: number } | null>(null);
-  // const [Result, setResult] = useState<number[][]>([]);
 
   useEffect(() => {
     let interval: number | undefined;
-    if (start) {
+    if (start === 1) {
       interval = window.setInterval(() => {
         settime((time) => time + 1);
       }, 1000);
@@ -36,14 +34,11 @@ const Home = () => {
   }, [start, time]);
 
   const changeboard = (height: number, width: number, numbomb: number) => {
-    setClickedBomb(null);
-    setface(0);
-    setstart(false);
+    setstart(0);
     settime(0);
     setbombMap(Array.from({ length: height }, () => Array(width).fill(0)));
     setuserInputs(Array.from({ length: height }, () => Array(width).fill(-1)));
     setelement({ height, width, numbomb });
-    // setResult([]);
   };
 
   const spread = (x: number, y: number, bombMap: number[][], userInputs: number[][]) => {
@@ -75,6 +70,7 @@ const Home = () => {
 
     if (newbombMap[y][x] === 11) {
       setface(2);
+
       for (let i = 0; i < element.height; i++) {
         for (let j = 0; j < element.width; j++) {
           if (newbombMap[i][j] === 11) {
@@ -82,8 +78,8 @@ const Home = () => {
           }
         }
       }
-      setClickedBomb({ x, y });
-      setstart(false);
+      newuserInputs[y][x] = -3;
+      setstart(0);
     }
     return newuserInputs;
   };
@@ -97,7 +93,7 @@ const Home = () => {
     }
     if (count2 === element.height * element.width - element.numbomb) {
       setface(1);
-      setstart(false);
+      setstart(0);
       for (let i = 0; i < element.height; i++) {
         for (let j = 0; j < element.width; j++) {
           if (bombMap[i][j] === 11) {
@@ -112,16 +108,14 @@ const Home = () => {
 
   const reset = () => {
     settime(0);
-    setstart(false);
+    setstart(0);
     setface(0);
-    setClickedBomb(null);
     const newUserInputs = Array.from({ length: element.height }, () =>
       Array(element.width).fill(-1),
     );
     const newBombMap = Array.from({ length: element.height }, () => Array(element.width).fill(0));
     setuserInputs(newUserInputs);
     setbombMap(newBombMap);
-    // setResult([]);
     console.log(`userInputs:`, newUserInputs);
     console.log(`bombMap:`, newBombMap);
   };
@@ -160,7 +154,7 @@ const Home = () => {
     if (newuserInputs[y][x] === -2 || face === 1 || face === 2) {
       return;
     }
-    if (!start) {
+    if (start === 0) {
       const cells = [];
       for (let cx = 0; cx < element.width; cx++) {
         for (let cy = 0; cy < element.height; cy++) {
@@ -197,16 +191,15 @@ const Home = () => {
           }
         }
       }
-      setstart(true);
+      setstart(1);
       setbombMap(newbombMap);
     }
 
     const newNewSampleBoard = spread(x, y, newbombMap, newuserInputs);
-    newNewSampleBoard[y][x] = 0;
     setuserInputs(newNewSampleBoard);
     clear(newNewSampleBoard, newbombMap);
+    console.log(newNewSampleBoard);
   };
-
   return (
     <div className={styles.container}>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -314,7 +307,7 @@ const Home = () => {
                 >
                   <div
                     className={
-                      clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                      userInputs[y][x] === -3
                         ? styles.redbomb
                         : userInputs[y][x] === -1
                           ? styles.rock
@@ -323,7 +316,7 @@ const Home = () => {
                             : styles.fusion
                     }
                     style={
-                      clickedBomb && clickedBomb.x === x && clickedBomb.y === y
+                      userInputs[y][x] === -3
                         ? { backgroundPosition: `${-30 * 10}px 0px ` }
                         : userInputs[y][x] === -1
                           ? undefined
