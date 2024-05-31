@@ -104,3 +104,7 @@
   background: url('~/src/assets/images/minesweeper.icons.png') no-repeat;
   background-color: #f22;
 }
+
+/* .topAreaBoard {
+  display: flex;
+} */
