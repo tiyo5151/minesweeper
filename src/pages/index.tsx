@@ -1,5 +1,5 @@
 import styles from './index.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 const directions = [
   [1, 0],
@@ -19,7 +19,32 @@ const Home = () => {
   const [bombMap, setbombMap] = useState(Array.from({ length: 9 }, () => Array(9).fill(0)));
   const [time, settime] = useState(0);
   const [start, setstart] = useState(0);
-  const [face, setface] = useState(0);
+
+  const face = useMemo(() => {
+    if (start === 1) {
+      return 0;
+    } else {
+      for (let i = 0; i < element.height; i++) {
+        for (let j = 0; j < element.width; j++) {
+          if (userInputs[i][j] === -3) {
+            return 2;
+          }
+        }
+      }
+      let cells0 = 0;
+      for (let x = 0; x < element.width; x++) {
+        for (let y = 0; y < element.height; y++) {
+          if (userInputs[y][x] === 0 && bombMap[y][x] !== 11) {
+            cells0++;
+          }
+        }
+      }
+      if (cells0 === element.height * element.width - element.numbomb) {
+        return 1;
+      }
+      return 0;
+    }
+  }, [start, userInputs, bombMap, element]);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -69,7 +94,7 @@ const Home = () => {
     recursiveSpread(x, y);
 
     if (newbombMap[y][x] === 11) {
-      setface(2);
+      // setface(2);
 
       for (let i = 0; i < element.height; i++) {
         for (let j = 0; j < element.width; j++) {
@@ -92,7 +117,7 @@ const Home = () => {
       }
     }
     if (count2 === element.height * element.width - element.numbomb) {
-      setface(1);
+      // setface(1);
       setstart(0);
       for (let i = 0; i < element.height; i++) {
         for (let j = 0; j < element.width; j++) {
@@ -109,7 +134,7 @@ const Home = () => {
   const reset = () => {
     settime(0);
     setstart(0);
-    setface(0);
+    // setface(0);
     const newUserInputs = Array.from({ length: element.height }, () =>
       Array(element.width).fill(-1),
     );
@@ -200,6 +225,7 @@ const Home = () => {
     clear(newNewSampleBoard, newbombMap);
     console.log(newNewSampleBoard);
   };
+
   return (
     <div className={styles.container}>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
